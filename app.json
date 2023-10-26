@@ -1,0 +1,33 @@
+{
+  "id": "2486ad7a-b919-41c1-83a8-585cf0510694",
+  "name": "Task Manager Frontend",
+  "publisher": "Finn Pedersen France",
+  "version": "1.0.0.0",
+  "brief": "Frontend to Task Manager API",
+  "description": "Simple app to illustrate how BC can work as a pure frontend.",
+  "privacyStatement": "https://finnpedersenkazes.github.io/",
+  "EULA": "https://finnpedersenkazes.github.io/",
+  "help": "https://finnpedersenkazes.github.io/",
+  "url": "https://finnpedersenkazes.github.io/",
+  "logo": "Logo.png",
+  "dependencies": [],
+  "screenshots": [],
+  "platform": "1.0.0.0",
+  "application": "22.0.0.0",
+  "idRanges": [
+    {
+      "from": 50120,
+      "to": 50129
+    }
+  ],
+  "features": [
+    "NoImplicitWith"
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": true,
+    "includeSourceInSymbolFile": true
+  },
+  "contextSensitiveHelpUrl": "https://finnpedersenkazes.github.io/",
+  "runtime": "11.1"
+}
