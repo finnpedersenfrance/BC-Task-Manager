@@ -4,7 +4,7 @@
     "rules": [
         {
             "id": "AA0139",
-            "action": "None",
+            "action": "Error",
             "justification": "Do not assign a text to a target with smaller size. POTENTIAL RUNTIME ERROR."
         },
         {
@@ -14,7 +14,7 @@
         },
         {
             "id": "AL0615",
-            "action": "None",
+            "action": "Error",
             "justification": "Field '{0}' is not specified as a source expression on page '{1}'. All fields specified in ODataKeyFields must be used as the source expression in a page control. POTENTIAL RUNTIME ERROR."
         },
         {
@@ -34,7 +34,7 @@
         },
         {
             "id": "AA0232",
-            "action": "None",
+            "action": "Error",
             "justification": "The FlowField of a table should be indexed. PERFORMANCE. The CodeAnalyzer has a problem."
         },
         {
@@ -44,7 +44,7 @@
         },
         {
             "id": "AA0205",
-            "action": "None",
+            "action": "Error",
             "justification": "Variables must be initialized before usage. SHOULD BE INVESTIGATED. The CodeAnalyzer has a problem with TransferFields."
         },
         {
@@ -59,42 +59,42 @@
         },
         {
             "id": "AW0006",
-            "action": "None",
+            "action": "Error",
             "justification": "Pages and reports should use the UsageCategory and ApplicationArea properties to be searchable. SHOULD BE INVESTIGATED."
         },
         {
             "id": "AA0206",
-            "action": "None",
+            "action": "Error",
             "justification": "The value assigned to a variable must be used. SHOULD BE INVESTIGATED."
         },
         {
             "id": "AA0244",
-            "action": "None",
+            "action": "Error",
             "justification": "Do not use identical names for parameters and global variables. SHOULD BE INVESTIGATED."
         },
         {
             "id": "AA0198",
-            "action": "None",
+            "action": "Error",
             "justification": "Do not use identical names for local and global variables. SHOULD BE INVESTIGATED."
         },
         {
             "id": "AA0137",
-            "action": "None",
+            "action": "Info",
             "justification": "Do not declare variables that are unused. SHOULD BE INVESTIGATED."
         },
         {
             "id": "AA0021",
-            "action": "None",
+            "action": "Error",
             "justification": "Variable declarations should be ordered by type. IMPROVE CODE READABILITY."
         },
         {
             "id": "AA0005",
-            "action": "None",
+            "action": "Error",
             "justification": "Only use BEGIN..END to enclose compound statements. IMPROVE CODE READABILITY."
         },
         {
             "id": "AA0228",
-            "action": "None",
+            "action": "Error",
             "justification": "The local method must be used; otherwise removed. IMPROVE CODE READABILITY."
         },
         {
@@ -104,32 +104,32 @@
         },
         {
             "id": "AA0074",
-            "action": "None",
+            "action": "Error",
             "justification": "TextConst and Label variable names should have an approved suffix. IMPROVE CODE READABILITY."
         },
         {
             "id": "AA0215",
-            "action": "None",
+            "action": "Error",
             "justification": "Follow the style guide about the best practices for naming. IMPROVE CODE READABILITY."
         },
         {
             "id": "AA0470",
-            "action": "None",
+            "action": "Error",
             "justification": "Placeholders should have a comment explaining their content. IMPROVE CODE READABILITY."
         },
         {
             "id": "AA0073",
-            "action": "None",
+            "action": "Error",
             "justification": "The name of temporary variable must be prefixed with Temp. IMPROVE CODE READABILITY."
         },
         {
             "id": "AA0202",
-            "action": "None",
+            "action": "Error",
             "justification": "To avoid confusion, do not give local variables the same name as fields, methods, or actions in the same scope. IMPROVE CODE READABILITY."
         },
         {
             "id": "AA0241",
-            "action": "None",
+            "action": "Error",
             "justification": "Use all lowercase letters for reserved language keywords. IMPROVE CODE READABILITY."
         },
         {
@@ -139,7 +139,7 @@
         },
         {
             "id": "AA0203",
-            "action": "None",
+            "action": "Error",
             "justification": "To avoid confusion, do not give methods the same name as fields or actions in the same scope. IMPROVE CODE READABILITY."
         },
         {
@@ -164,7 +164,7 @@
         },
         {
             "id": "AA0218",
-            "action": "None",
+            "action": "Error",
             "justification": "You must write a tooltip in the Tooltip property for all controls of type Action and Field that exist on page objects. BEST PRACTICES."
         },
         {
@@ -179,17 +179,17 @@
         },
         {
             "id": "AA0101",
-            "action": "None",
+            "action": "Error",
             "justification": "Use camel case property values in pages of type API. BEST PRACTICES."
         },
         {
             "id": "AA0102",
-            "action": "None",
+            "action": "Error",
             "justification": "Use camel case name for field controls in pages of type API. BEST PRACTICES."
         },
         {
             "id": "AS0011",
-            "action": "None",
+            "action": "Error",
             "justification": "AppSourceCop Error. An affix is required. INVESTIGATE IF NEEDED IN YOUR PROJECT."
         }
     ]
