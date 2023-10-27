@@ -6,7 +6,6 @@ page 50121 "Task Manager Entry Card"
     SourceTable = "Task Manager Entry";
     UsageCategory = None;
     DelayedInsert = true;
-    DataCaptionFields = Id, Title;
 
     layout
     {
@@ -80,6 +79,7 @@ page 50121 "Task Manager Entry Card"
                 PromotedOnly = true;
                 ToolTip = 'Creates the task in the Task Manager API';
                 Image = NewDocument;
+                Visible = ShowCreateAction;
 
                 trigger OnAction()
                 var
@@ -111,6 +111,7 @@ page 50121 "Task Manager Entry Card"
                 PromotedOnly = true;
                 ToolTip = 'Updates the task in the Task Manager API';
                 Image = UpdateXML;
+                Visible = not ShowCreateAction;
 
                 trigger OnAction()
                 var
@@ -142,6 +143,7 @@ page 50121 "Task Manager Entry Card"
                 PromotedOnly = true;
                 ToolTip = 'Deletes the task from the Task Manager API';
                 Image = DeleteXML;
+                Visible = not ShowCreateAction;
 
                 trigger OnAction()
                 var
@@ -155,4 +157,19 @@ page 50121 "Task Manager Entry Card"
         }
 
     }
+
+
+    trigger OnAfterGetRecord()
+    begin
+        ActionSetVisibility();
+    end;
+
+    local procedure ActionSetVisibility()
+    begin
+        ShowCreateAction := (Rec.id = 0);
+    end;
+
+    var
+        ShowCreateAction: Boolean;
+
 }

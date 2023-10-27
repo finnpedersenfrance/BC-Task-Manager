@@ -4,6 +4,7 @@ table 50120 "Task Manager Entry"
     DataClassification = ToBeClassified;
     LookupPageId = "Task Manager Entry Card";
     DrillDownPageId = "Task Manager Entry Card";
+    DataCaptionFields = Id, Title;
 
     fields
     {
