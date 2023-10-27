@@ -2,13 +2,15 @@ table 50120 "Task Manager Entry"
 {
     Caption = 'Task Manager Entry';
     DataClassification = ToBeClassified;
-    TableType = Temporary;
+    LookupPageId = "Task Manager Entry Card";
+    DrillDownPageId = "Task Manager Entry Card";
 
     fields
     {
         field(1; Id; Integer)
         {
             Caption = 'Id';
+            Editable = false;
         }
         field(2; Title; Text[100])
         {
@@ -59,12 +61,26 @@ table 50120 "Task Manager Entry"
         {
             Caption = 'Updated At';
         }
+
+        field(50000; PrimaryKey; guid)
+        {
+            Caption = 'Primary Key';
+            Editable = false;
+        }
     }
     keys
     {
-        key(PK; Id)
+        key(PrimaryKey; PrimaryKey)
         {
             Clustered = true;
         }
+        key(APIKey; Id)
+        {
+        }
     }
+
+    trigger OnInsert()
+    begin
+        PrimaryKey := CreateGuid();
+    end;
 }

@@ -89,7 +89,7 @@
         },
         {
             "id": "AA0005",
-            "action": "Error",
+            "action": "Warning",
             "justification": "Only use BEGIN..END to enclose compound statements. IMPROVE CODE READABILITY."
         },
         {
