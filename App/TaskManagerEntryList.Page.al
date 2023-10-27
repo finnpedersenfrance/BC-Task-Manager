@@ -64,7 +64,7 @@ page 50120 "Task Manager Entry List"
                 PromotedIsBig = true;
                 PromotedOnly = true;
                 ToolTip = 'Gets all tasks from the Task Manager API';
-                Image = AllLines;
+                Image = GetSourceDoc;
 
                 trigger OnAction()
                 var
@@ -84,7 +84,7 @@ page 50120 "Task Manager Entry List"
                 PromotedIsBig = true;
                 PromotedOnly = true;
                 ToolTip = 'Deletes all tasks from BC';
-                Image = AllLines;
+                Image = DeleteXML;
 
                 trigger OnAction()
                 begin
