@@ -5,7 +5,7 @@ page 50121 "Task Manager Entry Card"
     PageType = Card;
     SourceTable = "Task Manager Entry";
     UsageCategory = None;
-    DelayedInsert = true;
+    InsertAllowed = false;
 
     layout
     {
@@ -62,114 +62,28 @@ page 50121 "Task Manager Entry Card"
                     ToolTip = 'Specifies the value of the Planned Starting Time field.';
                 }
             }
+            group(System)
+            {
+                Caption = 'System';
+
+                field("Updated At"; Rec."Updated At")
+                {
+                    ToolTip = 'Specifies when the entry was last updated.';
+                }
+                field("Created At"; Rec."Created At")
+                {
+                    ToolTip = 'Specifies when the entry was created.';
+                }
+            }
         }
     }
 
-    actions
-    {
-        area(Processing)
-        {
-            action(Create)
-            {
-                ApplicationArea = All;
-                Caption = 'Create';
-                Promoted = true;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
-                PromotedOnly = true;
-                ToolTip = 'Creates the task in the Task Manager API';
-                Image = NewDocument;
-                Visible = ShowCreateAction;
-
-                trigger OnAction()
-                var
-                    TaskManagerEntry: Record "Task Manager Entry";
-                    TaskManagerFunctions: Codeunit "Task Manager API";
-                    Id: Integer;
-                begin
-                    if Rec.id = 0 then begin
-                        TaskManagerFunctions.CreateOneRequest(Rec, Id);
-                        TaskManagerEntry.SetCurrentKey(Id);
-                        TaskManagerEntry.SetRange(Id, Id);
-                        if TaskManagerEntry.FindFirst() then begin
-                            CurrPage.SetRecord(TaskManagerEntry);
-                            CurrPage.Update();
-                            Message('Task created with id %1', Rec.id);
-                        end else
-                            Message('Task %1 not found.', Rec.id)
-                    end else
-                        Message('Task %1 already exists. Choose Update.', Rec.id);
-                end;
-            }
-            action(Modify)
-            {
-                ApplicationArea = All;
-                Caption = 'Modify';
-                Promoted = true;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
-                PromotedOnly = true;
-                ToolTip = 'Updates the task in the Task Manager API';
-                Image = UpdateXML;
-                Visible = not ShowCreateAction;
-
-                trigger OnAction()
-                var
-                    TaskManagerEntry: Record "Task Manager Entry";
-                    TaskManagerFunctions: Codeunit "Task Manager API";
-                begin
-                    if Rec.id > 0 then begin
-                        TaskManagerFunctions.UpdateOneRequest(Rec);
-                        TaskManagerEntry.SetCurrentKey(Id);
-                        TaskManagerEntry.SetRange(Id, Rec.id);
-                        if TaskManagerEntry.FindFirst() then begin
-                            TaskManagerEntry.Get(Rec.Id);
-                            CurrPage.SetRecord(TaskManagerEntry);
-                            CurrPage.Update();
-                            Message('Task %1 updated.', Rec.id);
-                        end else
-                            Message('Task %1 not found.', Rec.id)
-                    end else
-                        Message('Task %1 does not exist. Choose Create.', Rec.id);
-                end;
-            }
-            action(Delete)
-            {
-                ApplicationArea = All;
-                Caption = 'Delete';
-                Promoted = true;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
-                PromotedOnly = true;
-                ToolTip = 'Deletes the task from the Task Manager API';
-                Image = DeleteXML;
-                Visible = not ShowCreateAction;
-
-                trigger OnAction()
-                var
-                    TaskManagerFunctions: Codeunit "Task Manager API";
-                begin
-                    TaskManagerFunctions.DeleteOneRequest(Rec.id);
-                    Rec.Delete();
-                    Message('Task deleted.');
-                end;
-            }
-        }
-
-    }
-
-
-    trigger OnAfterGetRecord()
-    begin
-        ActionSetVisibility();
-    end;
-
-    local procedure ActionSetVisibility()
-    begin
-        ShowCreateAction := (Rec.id = 0);
-    end;
-
+    trigger OnOpenPage()
     var
-        ShowCreateAction: Boolean;
+        TaskManagerAPI: Codeunit "Task Manager API";
+    begin
+        if Rec.Id > 0 then
+            TaskManagerAPI.ReadOneRequest(Rec.id, Rec);
+    end;
 
 }

@@ -1,72 +1,14 @@
 codeunit 50120 "Task Manager API"
 {
-    local procedure APIUrl(Id: Integer): Text
-    begin
-        if Id < 0 then
-            Error('Invalid ID: %1', Id);
-        if Id = 0 then
-            exit('https://taskmanager02-api-c6207da5113d.herokuapp.com/tasks')
-        else
-            exit('https://taskmanager02-api-c6207da5113d.herokuapp.com/tasks/' + Format(Id));
-    end;
 
+    /* CRUD operations on the Task Manager API
+        C: Create
+        R: Read
+        U: Update
+        D: Delete
+    */
 
-    procedure ReadAllRequest()
-    var
-        Client: HttpClient;
-        RequestMessage: HttpRequestMessage;
-        ResponseMessage: HttpResponseMessage;
-        RequestUrl: Text;
-        TextResponse: Text;
-        ErrorMessage: Text;
-    begin
-        RequestMessage.Method := 'GET';
-        RequestUrl := APIUrl(0);
-        RequestMessage.SetRequestUri(RequestUrl);
-
-        if Client.Send(RequestMessage, ResponseMessage) then begin
-            if ResponseMessage.HttpStatusCode() = HttpStatusCodeOK() then begin
-                ResponseMessage.Content().ReadAs(TextResponse);
-                ProcessGetAllResult(TextResponse);
-            end else begin
-                ErrorMessage := StrSubstNo('Web service call failed (status code %1)', ResponseMessage.HttpStatusCode());
-                error(ErrorMessage);
-            end;
-        end else begin
-            ErrorMessage := 'Cannot contact service, connection error!';
-            error(ErrorMessage);
-        end;
-    end;
-
-    procedure ReadOneRequest(Id: Integer)
-    var
-        Client: HttpClient;
-        RequestMessage: HttpRequestMessage;
-        ResponseMessage: HttpResponseMessage;
-        RequestUrl: Text;
-        TextResponse: Text;
-        ErrorMessage: Text;
-
-    begin
-        RequestMessage.Method := 'GET';
-        RequestUrl := APIUrl(Id);
-        RequestMessage.SetRequestUri(RequestUrl);
-
-        if Client.Send(RequestMessage, ResponseMessage) then begin
-            if ResponseMessage.HttpStatusCode() = HttpStatusCodeOK() then begin
-                ResponseMessage.Content().ReadAs(TextResponse);
-                ProcessGetOneResult(TextResponse, Id);
-            end else begin
-                ErrorMessage := StrSubstNo('Web service call failed (status code %1)', ResponseMessage.HttpStatusCode());
-                error(ErrorMessage);
-            end;
-        end else begin
-            ErrorMessage := 'Cannot contact service, connection error!';
-            error(ErrorMessage);
-        end;
-    end;
-
-    procedure UpdateOneRequest(TaskManagerEntry: Record "Task Manager Entry")
+    procedure CreateOneRequest(var TaskManagerEntry: Record "Task Manager Entry")
     var
         Document: JsonObject;
         Client: HttpClient;
@@ -77,15 +19,92 @@ codeunit 50120 "Task Manager API"
         TextJson: Text;
         RequestUrl: Text;
         TextResponse: Text;
-        ErrorMessage: Text;
-        Id: Integer;
+    begin
+        EncodeTaskObject(TaskManagerEntry, Document);
+        Document.WriteTo(TextJson);
+        RequestMessage.Method := 'POST';
+        RequestUrl := APIUrl(TaskManagerEntry.Id);
+        RequestMessage.SetRequestUri(RequestUrl);
 
+        Content.WriteFrom(TextJson);
+        Content.GetHeaders(Headers);
+        Headers.Clear();
+        Headers.Add('Content-Type', 'application/json');
+        RequestMessage.Content := Content;
+
+        if Client.Send(RequestMessage, ResponseMessage) then begin
+            if ResponseMessage.HttpStatusCode() = HttpStatusCodeCreated() then begin
+                ResponseMessage.Content().ReadAs(TextResponse);
+                ProcessCreateOneResult(TextResponse, TaskManagerEntry);
+            end else
+                WebServiceCallFailedError(ResponseMessage.HttpStatusCode());
+        end else
+            ConnectionError();
+    end;
+
+    procedure ReadAllRequest(var TaskManagerEntry: Record "Task Manager Entry")
+    var
+        Client: HttpClient;
+        RequestMessage: HttpRequestMessage;
+        ResponseMessage: HttpResponseMessage;
+        RequestUrl: Text;
+        TextResponse: Text;
+    begin
+        RequestMessage.Method := 'GET';
+        RequestUrl := APIUrl(0);
+        RequestMessage.SetRequestUri(RequestUrl);
+
+        if Client.Send(RequestMessage, ResponseMessage) then begin
+            if ResponseMessage.HttpStatusCode() = HttpStatusCodeOK() then begin
+                ResponseMessage.Content().ReadAs(TextResponse);
+                ProcessGetAllResult(TextResponse, TaskManagerEntry);
+            end else
+                WebServiceCallFailedError(ResponseMessage.HttpStatusCode());
+        end else
+            ConnectionError();
+    end;
+
+    procedure ReadOneRequest(EntryId: Integer; var TaskManagerEntry: Record "Task Manager Entry")
+    var
+        Client: HttpClient;
+        RequestMessage: HttpRequestMessage;
+        ResponseMessage: HttpResponseMessage;
+        RequestUrl: Text;
+        TextResponse: Text;
+    begin
+        if EntryId = 0 then
+            Error('ReadOneRequest was called with id = 0. The Id must be a possitive integer.');
+        RequestMessage.Method := 'GET';
+        RequestUrl := APIUrl(EntryId);
+        RequestMessage.SetRequestUri(RequestUrl);
+
+        if Client.Send(RequestMessage, ResponseMessage) then begin
+            if ResponseMessage.HttpStatusCode() = HttpStatusCodeOK() then begin
+                ResponseMessage.Content().ReadAs(TextResponse);
+                ProcessReadOneResult(TextResponse, TaskManagerEntry);
+            end else
+                WebServiceCallFailedError(ResponseMessage.HttpStatusCode());
+        end else
+            ConnectionError();
+    end;
+
+    procedure UpdateOneRequest(var TaskManagerEntry: Record "Task Manager Entry")
+    var
+        Document: JsonObject;
+        Client: HttpClient;
+        RequestMessage: HttpRequestMessage;
+        ResponseMessage: HttpResponseMessage;
+        Headers: HttpHeaders;
+        Content: HttpContent;
+        TextJson: Text;
+        RequestUrl: Text;
+        TextResponse: Text;
     begin
         if TaskManagerEntry.id = 0 then
             exit;
         EncodeTaskObject(TaskManagerEntry, Document);
         Document.WriteTo(TextJson);
-        Message('Update: %1', TextJson);
+        // Message('Update: %1', TextJson);
         RequestMessage.Method := 'PATCH';
 
         RequestUrl := APIUrl(TaskManagerEntry.Id);
@@ -100,95 +119,74 @@ codeunit 50120 "Task Manager API"
         if Client.Send(RequestMessage, ResponseMessage) then begin
             if ResponseMessage.HttpStatusCode() = HttpStatusCodeOK() then begin
                 ResponseMessage.Content().ReadAs(TextResponse);
-                ProcessGetOneResult(TextResponse, Id);
-            end else begin
-                ErrorMessage := StrSubstNo('Web service call failed (status code %1)', ResponseMessage.HttpStatusCode());
-                error(ErrorMessage);
-            end;
-        end else begin
-            ErrorMessage := 'Cannot contact service, connection error!';
-            error(ErrorMessage);
-        end;
+                ProcessUpdateOneResult(TextResponse, TaskManagerEntry);
+            end else
+                if ResponseMessage.HttpStatusCode() <> HttpStatusCodeNotFound() then // if we run an update on an entry that has been deleted
+                    WebServiceCallFailedError(ResponseMessage.HttpStatusCode());
+        end else
+            ConnectionError();
     end;
 
-    procedure CreateOneRequest(TaskManagerEntry: Record "Task Manager Entry"; var Id: Integer)
-    var
-        Document: JsonObject;
-        Client: HttpClient;
-        RequestMessage: HttpRequestMessage;
-        ResponseMessage: HttpResponseMessage;
-        Headers: HttpHeaders;
-        Content: HttpContent;
-        TextJson: Text;
-        RequestUrl: Text;
-        TextResponse: Text;
-        ErrorMessage: Text;
-    begin
-        EncodeTaskObject(TaskManagerEntry, Document);
-        Document.WriteTo(TextJson);
-        Message('Create: %1', TextJson);
-        RequestMessage.Method := 'POST';
-        RequestUrl := APIUrl(TaskManagerEntry.Id);
-        RequestMessage.SetRequestUri(RequestUrl);
-
-        Content.WriteFrom(TextJson);
-        Content.GetHeaders(Headers);
-        Headers.Clear();
-        Headers.Add('Content-Type', 'application/json');
-        RequestMessage.Content := Content;
-
-        if Client.Send(RequestMessage, ResponseMessage) then begin
-            if ResponseMessage.HttpStatusCode() = HttpStatusCodeCreated() then begin
-                ResponseMessage.Content().ReadAs(TextResponse);
-                ProcessGetOneResult(TextResponse, Id);
-                ReadOneRequest(Id);
-            end else begin
-                ErrorMessage := StrSubstNo('Web service call failed (status code %1)', ResponseMessage.HttpStatusCode());
-                error(ErrorMessage);
-            end;
-        end else begin
-            ErrorMessage := 'Cannot contact service, connection error!';
-            error(ErrorMessage);
-        end;
-    end;
-
-    procedure DeleteOneRequest(Id: Integer)
+    procedure DeleteOneRequest(EntryId: Integer)
     var
         Client: HttpClient;
         RequestMessage: HttpRequestMessage;
         ResponseMessage: HttpResponseMessage;
         RequestUrl: Text;
-        ErrorMessage: Text;
-
     begin
         RequestMessage.Method := 'DELETE';
-        RequestUrl := APIUrl(Id);
+        RequestUrl := APIUrl(EntryId);
         RequestMessage.SetRequestUri(RequestUrl);
 
         if Client.Send(RequestMessage, ResponseMessage) then begin
-            if not (ResponseMessage.HttpStatusCode() in [HttpStatusCodeNoContent(), HttpStatusCodeNotFound()]) then begin
-                ErrorMessage := StrSubstNo('Web service call failed (status code %1)', ResponseMessage.HttpStatusCode());
-                error(ErrorMessage);
-            end
-        end else begin
-            ErrorMessage := 'Cannot contact service, connection error!';
-            error(ErrorMessage);
-        end;
+            if not (ResponseMessage.HttpStatusCode() in [HttpStatusCodeNoContent(), HttpStatusCodeNotFound()]) then
+                WebServiceCallFailedError(ResponseMessage.HttpStatusCode());
+        end else
+            ConnectionError();
     end;
 
-    local procedure ProcessGetAllResult(TextResponse: Text)
+    local procedure ProcessGetAllResult(TextResponse: Text; var TaskManagerEntry: Record "Task Manager Entry")
     var
         TaskList: JsonArray;
     begin
         if not TaskList.ReadFrom(TextResponse) then
-            error('Invalid JSON ARRAY response.');
+            error('I expected a JSON ARRAY, but got this %1.', TextResponse);
 
-        DecodeTaskArray(TaskList);
+        DecodeTaskArray(TaskList, TaskManagerEntry);
     end;
 
-    local procedure DecodeTaskArray(TaskList: JsonArray)
+    local procedure ProcessCreateOneResult(TextResponse: Text; var TaskManagerEntry: Record "Task Manager Entry")
     var
-        TaskManagerEntry: Record "Task Manager Entry";
+        TaskObject: JsonObject;
+    begin
+        if not TaskObject.ReadFrom(TextResponse) then
+            error('I expected a JSON OBJECT, but got this: %1', TextResponse);
+
+        DecodeTaskObject(TaskObject, TaskManagerEntry);
+    end;
+
+    local procedure ProcessReadOneResult(TextResponse: Text; var TaskManagerEntry: Record "Task Manager Entry")
+    var
+        TaskObject: JsonObject;
+    begin
+        if not TaskObject.ReadFrom(TextResponse) then
+            error('I expected a JSON OBJECT, but got this: %1', TextResponse);
+
+        DecodeTaskObject(TaskObject, TaskManagerEntry);
+    end;
+
+    local procedure ProcessUpdateOneResult(TextResponse: Text; var TaskManagerEntry: Record "Task Manager Entry")
+    var
+        TaskObject: JsonObject;
+    begin
+        if not TaskObject.ReadFrom(TextResponse) then
+            error('I expected a JSON OBJECT, but got this: %1', TextResponse);
+
+        DecodeTaskObject(TaskObject, TaskManagerEntry);
+    end;
+
+    local procedure DecodeTaskArray(TaskList: JsonArray; var TaskManagerEntry: Record "Task Manager Entry")
+    var
         Token: JsonToken;
         TaskObject: JsonObject;
     begin
@@ -197,33 +195,8 @@ codeunit 50120 "Task Manager API"
         foreach Token in TaskList do begin
             TaskObject := Token.AsObject();
             DecodeTaskObject(TaskObject, TaskManagerEntry);
-            TaskManagerEntry.Insert(true);
+            TaskManagerEntry.Insert();
         end;
-    end;
-
-    local procedure ProcessGetOneResult(TextResponse: Text; var Id: Integer)
-    var
-        NewTaskManagerEntry: Record "Task Manager Entry";
-        CurrentTaskManagerEntry: Record "Task Manager Entry";
-        TaskObject: JsonObject;
-    begin
-        if not TaskObject.ReadFrom(TextResponse) then
-            error('Invalid JSON OBJECT response.');
-
-        DecodeTaskObject(TaskObject, NewTaskManagerEntry);
-        CurrentTaskManagerEntry.SetCurrentKey(Id);
-        CurrentTaskManagerEntry.SetRange(Id, NewTaskManagerEntry.Id);
-        if CurrentTaskManagerEntry.FindFirst() then begin
-            CurrentTaskManagerEntry.id := NewTaskManagerEntry.id;
-            CurrentTaskManagerEntry.TransferFields(NewTaskManagerEntry, false);
-            if CurrentTaskManagerEntry.Modify() then;
-        end else begin
-            CurrentTaskManagerEntry.Init();
-            CurrentTaskManagerEntry.id := NewTaskManagerEntry.id;
-            CurrentTaskManagerEntry.TransferFields(NewTaskManagerEntry);
-            CurrentTaskManagerEntry.Insert(true);
-        end;
-        Id := CurrentTaskManagerEntry.Id;
     end;
 
     local procedure DecodeTaskObject(TaskObject: JsonObject; var TaskManagerEntry: Record "Task Manager Entry")
@@ -262,7 +235,6 @@ codeunit 50120 "Task Manager API"
         if TaskObject.Get('duration_minutes', DurationField) then
             if not DurationField.AsValue().IsNull then
                 TaskManagerEntry."Duration Minutes" := DurationField.AsValue().AsInteger();
-
         if TaskObject.Get('attention_date', AttentionDateField) then
             if not AttentionDateField.AsValue().IsNull then
                 TaskManagerEntry."Attention Date" := AttentionDateField.AsValue().AsDate();
@@ -283,32 +255,71 @@ codeunit 50120 "Task Manager API"
             if not StatusField.AsValue().IsNull then
                 TaskManagerEntry.Status := StatusField.AsValue().AsInteger();
 
-        if TaskObject.Get('created_date', CreatedDateField) then
+        if TaskObject.Get('created_at', CreatedDateField) then
             if not CreatedDateField.AsValue().IsNull then
                 TaskManagerEntry."Created At" := CreatedDateField.AsValue().AsDateTime();
 
-        if TaskObject.Get('updated_date', UpdatedDateField) then
+        if TaskObject.Get('updated_at', UpdatedDateField) then
             if not UpdatedDateField.AsValue().IsNull then
                 TaskManagerEntry."Updated At" := UpdatedDateField.AsValue().AsDateTime();
     end;
 
     local procedure EncodeTaskObject(TaskManagerEntry: Record "Task Manager Entry"; var TaskObject: JsonObject)
-    var
-        TimeAsDateTime: DateTime;
     begin
         if TaskManagerEntry.Id > 0 then
             TaskObject.Add('id', TaskManagerEntry.Id);
         TaskObject.Add('title', TaskManagerEntry.Title);
-        if TaskManagerEntry.Description <> '' then
-            TaskObject.Add('description', TaskManagerEntry.Description);
+        TaskObject.Add('description', TaskManagerEntry.Description);
         TaskObject.Add('urgency', TaskManagerEntry.Urgency);
         TaskObject.Add('duration_minutes', TaskManagerEntry."Duration Minutes");
-        TaskObject.Add('attention_date', TaskManagerEntry."Attention Date");
-        TaskObject.Add('deadline', TaskManagerEntry.Deadline);
-        TaskObject.Add('planned_date', TaskManagerEntry."Planned Date");
-        TimeAsDateTime := CreateDateTime(TaskManagerEntry."Planned Date", TaskManagerEntry."Planned Starting Time");
-        TaskObject.Add('planned_starting_time', TimeAsDateTime);
+        EncodeDate('attention_date', TaskManagerEntry."Attention Date", TaskObject);
+        EncodeDate('deadline', TaskManagerEntry.Deadline, TaskObject);
+        EncodeDate('planned_date', TaskManagerEntry."Planned Date", TaskObject);
+        EncodeTime('planned_starting_time', TaskManagerEntry."Planned Date", TaskManagerEntry."Planned Starting Time", TaskObject);
+
         TaskObject.Add('status', TaskManagerEntry.Status);
+    end;
+
+    local procedure EncodeDate(ObjectKey: Text; Date: Date; var TaskObject: JsonObject)
+    var
+        NullValue: JsonValue;
+    begin
+        NullValue.SetValueToNull();
+        if Date <> 0D then
+            TaskObject.Add(ObjectKey, Date)
+        else
+            TaskObject.Add(ObjectKey, NullValue);
+    end;
+
+    local procedure EncodeTime(ObjectKey: Text; Date: Date; Time: Time; var TaskObject: JsonObject)
+    var
+        TimeAsDateTime: DateTime;
+        NullValue: JsonValue;
+    begin
+        NullValue.SetValueToNull();
+        if (Date <> 0D) and (Time <> 0T) then begin
+            TimeAsDateTime := CreateDateTime(Date, Time);
+            TaskObject.Add(ObjectKey, TimeAsDateTime);
+        end else
+            TaskObject.Add(ObjectKey, NullValue);
+    end;
+
+    local procedure APIUrl(Id: Integer): Text
+    begin
+        if Id = 0 then
+            exit('https://taskmanager02-api-c6207da5113d.herokuapp.com/tasks')
+        else
+            exit('https://taskmanager02-api-c6207da5113d.herokuapp.com/tasks/' + Format(Id));
+    end;
+
+    local procedure WebServiceCallFailedError(StatusCode: Integer)
+    begin
+        Error('Web service call failed (status code %1: %2)', StatusCode, GetHttpStatusMessage(StatusCode));
+    end;
+
+    local procedure ConnectionError()
+    begin
+        error('Cannot contact service, connection error!');
     end;
 
     local procedure HttpStatusCodeOK(): Integer
@@ -331,4 +342,141 @@ codeunit 50120 "Task Manager API"
         exit(404);
     end;
 
+    procedure GetHttpStatusMessage(HttpStatusCode: Integer): Text
+    var
+        StatusMessage: Text;
+    begin
+        case HttpStatusCode of
+            100:
+                StatusMessage := 'Continue';
+            101:
+                StatusMessage := 'Switching Protocols';
+            102:
+                StatusMessage := 'Processing';
+            103:
+                StatusMessage := 'Early Hints';
+            200:
+                StatusMessage := 'OK';
+            201:
+                StatusMessage := 'Created';
+            202:
+                StatusMessage := 'Accepted';
+            203:
+                StatusMessage := 'Non-Authoritative Information';
+            204:
+                StatusMessage := 'No Content';
+            205:
+                StatusMessage := 'Reset Content';
+            206:
+                StatusMessage := 'Partial Content';
+            207:
+                StatusMessage := 'Multi-Status';
+            208:
+                StatusMessage := 'Already Reported';
+            226:
+                StatusMessage := 'IM Used';
+            300:
+                StatusMessage := 'Multiple Choices';
+            301:
+                StatusMessage := 'Moved Permanently';
+            302:
+                StatusMessage := 'Found';
+            303:
+                StatusMessage := 'See Other';
+            304:
+                StatusMessage := 'Not Modified';
+            305:
+                StatusMessage := 'Use Proxy';
+            306:
+                StatusMessage := 'Switch Proxy';
+            307:
+                StatusMessage := 'Temporary Redirect';
+            308:
+                StatusMessage := 'Permanent Redirect';
+            400:
+                StatusMessage := 'Bad Request';
+            401:
+                StatusMessage := 'Unauthorized';
+            402:
+                StatusMessage := 'Payment Required';
+            403:
+                StatusMessage := 'Forbidden';
+            404:
+                StatusMessage := 'Not Found';
+            405:
+                StatusMessage := 'Method Not Allowed';
+            406:
+                StatusMessage := 'Not Acceptable';
+            407:
+                StatusMessage := 'Proxy Authentication Required';
+            408:
+                StatusMessage := 'Request Timeout';
+            409:
+                StatusMessage := 'Conflict';
+            410:
+                StatusMessage := 'Gone';
+            411:
+                StatusMessage := 'Length Required';
+            412:
+                StatusMessage := 'Precondition Failed';
+            413:
+                StatusMessage := 'Payload Too Large';
+            414:
+                StatusMessage := 'URI Too Long';
+            415:
+                StatusMessage := 'Unsupported Media Type';
+            416:
+                StatusMessage := 'Range Not Satisfiable';
+            417:
+                StatusMessage := 'Expectation Failed';
+            418:
+                StatusMessage := 'I''m a teapot';
+            421:
+                StatusMessage := 'Misdirected Request';
+            422:
+                StatusMessage := 'Unprocessable Entity';
+            423:
+                StatusMessage := 'Locked';
+            424:
+                StatusMessage := 'Failed Dependency';
+            425:
+                StatusMessage := 'Too Early';
+            426:
+                StatusMessage := 'Upgrade Required';
+            428:
+                StatusMessage := 'Precondition Required';
+            429:
+                StatusMessage := 'Too Many Requests';
+            431:
+                StatusMessage := 'Request Header Fields Too Large';
+            451:
+                StatusMessage := 'Unavailable For Legal Reasons';
+            500:
+                StatusMessage := 'Internal Server Error';
+            501:
+                StatusMessage := 'Not Implemented';
+            502:
+                StatusMessage := 'Bad Gateway';
+            503:
+                StatusMessage := 'Service Unavailable';
+            504:
+                StatusMessage := 'Gateway Timeout';
+            505:
+                StatusMessage := 'HTTP Version Not Supported';
+            506:
+                StatusMessage := 'Variant Also Negotiates';
+            507:
+                StatusMessage := 'Insufficient Storage';
+            508:
+                StatusMessage := 'Loop Detected';
+            510:
+                StatusMessage := 'Not Extended';
+            511:
+                StatusMessage := 'Network Authentication Required';
+            else
+                StatusMessage := StrSubstNo('Unknown Status Code %1', HttpStatusCode);
+        end;
+
+        exit(StatusMessage);
+    end;
 }

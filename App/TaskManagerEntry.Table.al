@@ -5,6 +5,7 @@ table 50120 "Task Manager Entry"
     LookupPageId = "Task Manager Entry Card";
     DrillDownPageId = "Task Manager Entry Card";
     DataCaptionFields = Id, Title;
+    TableType = Temporary;
 
     fields
     {
@@ -57,31 +58,41 @@ table 50120 "Task Manager Entry"
         field(11; "Created At"; DateTime)
         {
             Caption = 'Created At';
+            Editable = false;
         }
         field(12; "Updated At"; DateTime)
         {
             Caption = 'Updated At';
-        }
-
-        field(50000; PrimaryKey; guid)
-        {
-            Caption = 'Primary Key';
             Editable = false;
         }
     }
     keys
     {
-        key(PrimaryKey; PrimaryKey)
-        {
-            Clustered = true;
-        }
         key(APIKey; Id)
         {
+            Clustered = true;
         }
     }
 
     trigger OnInsert()
+    var
+        TaskManagerFunctions: Codeunit "Task Manager API";
     begin
-        PrimaryKey := CreateGuid();
+        TaskManagerFunctions.CreateOneRequest(Rec);
     end;
+
+    trigger OnModify()
+    var
+        TaskManagerFunctions: Codeunit "Task Manager API";
+    begin
+        TaskManagerFunctions.UpdateOneRequest(Rec);
+    end;
+
+    trigger OnDelete()
+    var
+        TaskManagerFunctions: Codeunit "Task Manager API";
+    begin
+        TaskManagerFunctions.DeleteOneRequest(Rec.id);
+    end;
+
 }

@@ -4,9 +4,8 @@ page 50120 "Task Manager Entry List"
     Caption = 'Task Manager Entry List';
     PageType = List;
     SourceTable = "Task Manager Entry";
-    SourceTableView = sorting(Id);
+    SourceTableView = sorting(Id) order(descending);
     UsageCategory = Lists;
-    DelayedInsert = true;
 
     layout
     {
@@ -23,12 +22,9 @@ page 50120 "Task Manager Entry List"
                     ToolTip = 'Specifies the value of the Title field.';
 
                     trigger OnDrillDown()
-                    var
-                        TaskManagerEntryCard: Page "Task Manager Entry Card";
                     begin
-                        Rec.SetRange(Id, Rec.Id);
-                        TaskManagerEntryCard.SetTableView(Rec);
-                        TaskManagerEntryCard.RunModal();
+                        Page.Run(Page::"Task Manager Entry Card", Rec);
+                        CurrPage.Update();
                     end;
                 }
                 field("Attention Date"; Rec."Attention Date")
@@ -49,6 +45,7 @@ page 50120 "Task Manager Entry List"
                 }
             }
         }
+
     }
 
     actions
@@ -58,41 +55,32 @@ page 50120 "Task Manager Entry List"
             action(GetAll)
             {
                 ApplicationArea = All;
-                Caption = 'Get All';
+                Caption = 'Refresh';
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 PromotedOnly = true;
                 ToolTip = 'Gets all tasks from the Task Manager API';
-                Image = GetSourceDoc;
-
+                Image = Refresh;
                 trigger OnAction()
                 var
                     TaskManagerFunctions: Codeunit "Task Manager API";
                 begin
-                    TaskManagerFunctions.ReadAllRequest();
-                    Message('All tasks have been retrieved from the Task Manager API');
-                    CurrPage.Update();
-                end;
-            }
-            action(ClearBC)
-            {
-                ApplicationArea = All;
-                Caption = 'Clear BC';
-                Promoted = true;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
-                PromotedOnly = true;
-                ToolTip = 'Deletes all tasks from BC';
-                Image = DeleteXML;
-
-                trigger OnAction()
-                begin
                     Rec.DeleteAll();
-                    Message('All tasks have been cleared from BC.');
+                    TaskManagerFunctions.ReadAllRequest(Rec);
+                    Message('All tasks have been retrieved from the Task Manager API');
                     CurrPage.Update();
                 end;
             }
         }
     }
+
+    trigger OnOpenPage()
+    var
+        TaskManagerFunctions: Codeunit "Task Manager API";
+    begin
+        Rec.DeleteAll();
+        TaskManagerFunctions.ReadAllRequest(Rec);
+    end;
+
 }
