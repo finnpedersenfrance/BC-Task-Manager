@@ -23,7 +23,7 @@ codeunit 50120 "Task Manager API"
         EncodeTaskObject(TaskManagerEntry, Document);
         Document.WriteTo(TextJson);
         RequestMessage.Method := 'POST';
-        RequestUrl := APIUrl(TaskManagerEntry.Id);
+        RequestUrl := APIUrl(0);
         RequestMessage.SetRequestUri(RequestUrl);
 
         Content.WriteFrom(TextJson);
@@ -35,7 +35,7 @@ codeunit 50120 "Task Manager API"
         if Client.Send(RequestMessage, ResponseMessage) then begin
             if ResponseMessage.HttpStatusCode() = HttpStatusCodeCreated() then begin
                 ResponseMessage.Content().ReadAs(TextResponse);
-                ProcessCreateOneResult(TextResponse, TaskManagerEntry);
+                ProcessJsonObjectResult(TextResponse, TaskManagerEntry);
             end else
                 WebServiceCallFailedError(ResponseMessage.HttpStatusCode());
         end else
@@ -57,7 +57,7 @@ codeunit 50120 "Task Manager API"
         if Client.Send(RequestMessage, ResponseMessage) then begin
             if ResponseMessage.HttpStatusCode() = HttpStatusCodeOK() then begin
                 ResponseMessage.Content().ReadAs(TextResponse);
-                ProcessGetAllResult(TextResponse, TaskManagerEntry);
+                ProcessJsonArrayResult(TextResponse, TaskManagerEntry);
             end else
                 WebServiceCallFailedError(ResponseMessage.HttpStatusCode());
         end else
@@ -81,7 +81,7 @@ codeunit 50120 "Task Manager API"
         if Client.Send(RequestMessage, ResponseMessage) then begin
             if ResponseMessage.HttpStatusCode() = HttpStatusCodeOK() then begin
                 ResponseMessage.Content().ReadAs(TextResponse);
-                ProcessReadOneResult(TextResponse, TaskManagerEntry);
+                ProcessJsonObjectResult(TextResponse, TaskManagerEntry);
             end else
                 WebServiceCallFailedError(ResponseMessage.HttpStatusCode());
         end else
@@ -104,7 +104,6 @@ codeunit 50120 "Task Manager API"
             exit;
         EncodeTaskObject(TaskManagerEntry, Document);
         Document.WriteTo(TextJson);
-        // Message('Update: %1', TextJson);
         RequestMessage.Method := 'PATCH';
 
         RequestUrl := APIUrl(TaskManagerEntry.Id);
@@ -119,7 +118,7 @@ codeunit 50120 "Task Manager API"
         if Client.Send(RequestMessage, ResponseMessage) then begin
             if ResponseMessage.HttpStatusCode() = HttpStatusCodeOK() then begin
                 ResponseMessage.Content().ReadAs(TextResponse);
-                ProcessUpdateOneResult(TextResponse, TaskManagerEntry);
+                ProcessJsonObjectResult(TextResponse, TaskManagerEntry);
             end else
                 if ResponseMessage.HttpStatusCode() <> HttpStatusCodeNotFound() then // if we run an update on an entry that has been deleted
                     WebServiceCallFailedError(ResponseMessage.HttpStatusCode());
@@ -134,6 +133,8 @@ codeunit 50120 "Task Manager API"
         ResponseMessage: HttpResponseMessage;
         RequestUrl: Text;
     begin
+        if EntryId = 0 then
+            exit;
         RequestMessage.Method := 'DELETE';
         RequestUrl := APIUrl(EntryId);
         RequestMessage.SetRequestUri(RequestUrl);
@@ -145,7 +146,7 @@ codeunit 50120 "Task Manager API"
             ConnectionError();
     end;
 
-    local procedure ProcessGetAllResult(TextResponse: Text; var TaskManagerEntry: Record "Task Manager Entry")
+    local procedure ProcessJsonArrayResult(TextResponse: Text; var TaskManagerEntry: Record "Task Manager Entry")
     var
         TaskList: JsonArray;
     begin
@@ -155,27 +156,7 @@ codeunit 50120 "Task Manager API"
         DecodeTaskArray(TaskList, TaskManagerEntry);
     end;
 
-    local procedure ProcessCreateOneResult(TextResponse: Text; var TaskManagerEntry: Record "Task Manager Entry")
-    var
-        TaskObject: JsonObject;
-    begin
-        if not TaskObject.ReadFrom(TextResponse) then
-            error('I expected a JSON OBJECT, but got this: %1', TextResponse);
-
-        DecodeTaskObject(TaskObject, TaskManagerEntry);
-    end;
-
-    local procedure ProcessReadOneResult(TextResponse: Text; var TaskManagerEntry: Record "Task Manager Entry")
-    var
-        TaskObject: JsonObject;
-    begin
-        if not TaskObject.ReadFrom(TextResponse) then
-            error('I expected a JSON OBJECT, but got this: %1', TextResponse);
-
-        DecodeTaskObject(TaskObject, TaskManagerEntry);
-    end;
-
-    local procedure ProcessUpdateOneResult(TextResponse: Text; var TaskManagerEntry: Record "Task Manager Entry")
+    local procedure ProcessJsonObjectResult(TextResponse: Text; var TaskManagerEntry: Record "Task Manager Entry")
     var
         TaskObject: JsonObject;
     begin
@@ -267,17 +248,16 @@ codeunit 50120 "Task Manager API"
     local procedure EncodeTaskObject(TaskManagerEntry: Record "Task Manager Entry"; var TaskObject: JsonObject)
     begin
         if TaskManagerEntry.Id > 0 then
-            TaskObject.Add('id', TaskManagerEntry.Id);
-        TaskObject.Add('title', TaskManagerEntry.Title);
-        TaskObject.Add('description', TaskManagerEntry.Description);
-        TaskObject.Add('urgency', TaskManagerEntry.Urgency);
-        TaskObject.Add('duration_minutes', TaskManagerEntry."Duration Minutes");
+            EncodeInteger('id', TaskManagerEntry.Id, TaskObject);
+        EncodeText('title', TaskManagerEntry.Title, TaskObject);
+        EncodeText('description', TaskManagerEntry.Description, TaskObject);
+        EncodeInteger('urgency', TaskManagerEntry.Urgency, TaskObject);
+        EncodeInteger('duration_minutes', TaskManagerEntry."Duration Minutes", TaskObject);
         EncodeDate('attention_date', TaskManagerEntry."Attention Date", TaskObject);
         EncodeDate('deadline', TaskManagerEntry.Deadline, TaskObject);
         EncodeDate('planned_date', TaskManagerEntry."Planned Date", TaskObject);
         EncodeTime('planned_starting_time', TaskManagerEntry."Planned Date", TaskManagerEntry."Planned Starting Time", TaskObject);
-
-        TaskObject.Add('status', TaskManagerEntry.Status);
+        EncodeInteger('status', TaskManagerEntry.Status, TaskObject);
     end;
 
     local procedure EncodeDate(ObjectKey: Text; Date: Date; var TaskObject: JsonObject)
@@ -302,6 +282,16 @@ codeunit 50120 "Task Manager API"
             TaskObject.Add(ObjectKey, TimeAsDateTime);
         end else
             TaskObject.Add(ObjectKey, NullValue);
+    end;
+
+    local procedure EncodeInteger(ObjectKey: Text; Value: Integer; var TaskObject: JsonObject)
+    begin
+        TaskObject.Add(ObjectKey, Value)
+    end;
+
+    local procedure EncodeText(ObjectKey: Text; Value: Text; var TaskObject: JsonObject)
+    begin
+        TaskObject.Add(ObjectKey, Value)
     end;
 
     local procedure APIUrl(Id: Integer): Text

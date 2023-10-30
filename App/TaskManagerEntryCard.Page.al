@@ -78,12 +78,40 @@ page 50121 "Task Manager Entry Card"
         }
     }
 
+    actions
+    {
+        area(Processing)
+        {
+            action(Refresh)
+            {
+                ApplicationArea = All;
+                Caption = 'Refresh';
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                PromotedOnly = true;
+                ToolTip = 'Gets all tasks from the Task Manager API.';
+                Image = Refresh;
+                trigger OnAction()
+                var
+                    TaskManagerFunctions: Codeunit "Task Manager API";
+                begin
+                    TaskManagerFunctions.ReadOneRequest(Rec.id, Rec);
+                    Message('The task %1 has been retrieved from the Task Manager API.', Rec.id);
+                    CurrPage.Update();
+                end;
+            }
+        }
+    }
+
     trigger OnOpenPage()
     var
         TaskManagerAPI: Codeunit "Task Manager API";
     begin
-        if Rec.Id > 0 then
+        if Rec.Id > 0 then begin
             TaskManagerAPI.ReadOneRequest(Rec.id, Rec);
+            CurrPage.Update();
+        end;
     end;
 
 }

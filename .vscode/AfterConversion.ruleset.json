@@ -79,7 +79,7 @@
         },
         {
             "id": "AA0137",
-            "action": "Info",
+            "action": "Error",
             "justification": "Do not declare variables that are unused. SHOULD BE INVESTIGATED."
         },
         {
@@ -89,7 +89,7 @@
         },
         {
             "id": "AA0005",
-            "action": "Warning",
+            "action": "Error",
             "justification": "Only use BEGIN..END to enclose compound statements. IMPROVE CODE READABILITY."
         },
         {

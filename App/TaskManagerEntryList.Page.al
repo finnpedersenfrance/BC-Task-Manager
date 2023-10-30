@@ -52,7 +52,7 @@ page 50120 "Task Manager Entry List"
     {
         area(Processing)
         {
-            action(GetAll)
+            action(Refresh)
             {
                 ApplicationArea = All;
                 Caption = 'Refresh';
@@ -60,15 +60,15 @@ page 50120 "Task Manager Entry List"
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 PromotedOnly = true;
-                ToolTip = 'Gets all tasks from the Task Manager API';
+                ToolTip = 'Gets all tasks from the Task Manager API.';
                 Image = Refresh;
                 trigger OnAction()
                 var
-                    TaskManagerFunctions: Codeunit "Task Manager API";
+                    TaskManagerAPI: Codeunit "Task Manager API";
                 begin
                     Rec.DeleteAll();
-                    TaskManagerFunctions.ReadAllRequest(Rec);
-                    Message('All tasks have been retrieved from the Task Manager API');
+                    TaskManagerAPI.ReadAllRequest(Rec);
+                    Message('All tasks have been retrieved from the Task Manager API.');
                     CurrPage.Update();
                 end;
             }
@@ -77,10 +77,10 @@ page 50120 "Task Manager Entry List"
 
     trigger OnOpenPage()
     var
-        TaskManagerFunctions: Codeunit "Task Manager API";
+        TaskManagerAPI: Codeunit "Task Manager API";
     begin
         Rec.DeleteAll();
-        TaskManagerFunctions.ReadAllRequest(Rec);
+        TaskManagerAPI.ReadAllRequest(Rec);
     end;
 
 }
