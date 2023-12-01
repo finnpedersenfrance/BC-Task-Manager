@@ -146,7 +146,7 @@ codeunit 50120 "Task Manager API"
             ConnectionError();
     end;
 
-    local procedure ProcessJsonArrayResult(TextResponse: Text; var TaskManagerEntry: Record "Task Manager Entry")
+    procedure ProcessJsonArrayResult(TextResponse: Text; var TaskManagerEntry: Record "Task Manager Entry")
     var
         TaskList: JsonArray;
     begin
@@ -156,7 +156,7 @@ codeunit 50120 "Task Manager API"
         DecodeTaskArray(TaskList, TaskManagerEntry);
     end;
 
-    local procedure ProcessJsonObjectResult(TextResponse: Text; var TaskManagerEntry: Record "Task Manager Entry")
+    procedure ProcessJsonObjectResult(TextResponse: Text; var TaskManagerEntry: Record "Task Manager Entry")
     var
         TaskObject: JsonObject;
     begin
@@ -166,7 +166,7 @@ codeunit 50120 "Task Manager API"
         DecodeTaskObject(TaskObject, TaskManagerEntry);
     end;
 
-    local procedure DecodeTaskArray(TaskList: JsonArray; var TaskManagerEntry: Record "Task Manager Entry")
+    procedure DecodeTaskArray(TaskList: JsonArray; var TaskManagerEntry: Record "Task Manager Entry")
     var
         Token: JsonToken;
         TaskObject: JsonObject;
@@ -180,7 +180,7 @@ codeunit 50120 "Task Manager API"
         end;
     end;
 
-    local procedure DecodeTaskObject(TaskObject: JsonObject; var TaskManagerEntry: Record "Task Manager Entry")
+    procedure DecodeTaskObject(TaskObject: JsonObject; var TaskManagerEntry: Record "Task Manager Entry")
     var
         IdField: JsonToken;
         TitleField: JsonToken;
@@ -245,7 +245,7 @@ codeunit 50120 "Task Manager API"
                 TaskManagerEntry."Updated At" := UpdatedDateField.AsValue().AsDateTime();
     end;
 
-    local procedure EncodeTaskObject(TaskManagerEntry: Record "Task Manager Entry"; var TaskObject: JsonObject)
+    procedure EncodeTaskObject(TaskManagerEntry: Record "Task Manager Entry"; var TaskObject: JsonObject)
     begin
         if TaskManagerEntry.Id > 0 then
             EncodeInteger('id', TaskManagerEntry.Id, TaskObject);
@@ -260,7 +260,7 @@ codeunit 50120 "Task Manager API"
         EncodeInteger('status', TaskManagerEntry.Status, TaskObject);
     end;
 
-    local procedure EncodeDate(ObjectKey: Text; Date: Date; var TaskObject: JsonObject)
+    procedure EncodeDate(ObjectKey: Text; Date: Date; var TaskObject: JsonObject)
     var
         NullValue: JsonValue;
     begin
@@ -271,7 +271,7 @@ codeunit 50120 "Task Manager API"
             TaskObject.Add(ObjectKey, NullValue);
     end;
 
-    local procedure EncodeTime(ObjectKey: Text; Date: Date; Time: Time; var TaskObject: JsonObject)
+    procedure EncodeTime(ObjectKey: Text; Date: Date; Time: Time; var TaskObject: JsonObject)
     var
         TimeAsDateTime: DateTime;
         NullValue: JsonValue;
@@ -284,17 +284,17 @@ codeunit 50120 "Task Manager API"
             TaskObject.Add(ObjectKey, NullValue);
     end;
 
-    local procedure EncodeInteger(ObjectKey: Text; Value: Integer; var TaskObject: JsonObject)
+    procedure EncodeInteger(ObjectKey: Text; Value: Integer; var TaskObject: JsonObject)
     begin
         TaskObject.Add(ObjectKey, Value)
     end;
 
-    local procedure EncodeText(ObjectKey: Text; Value: Text; var TaskObject: JsonObject)
+    procedure EncodeText(ObjectKey: Text; Value: Text; var TaskObject: JsonObject)
     begin
         TaskObject.Add(ObjectKey, Value)
     end;
 
-    local procedure APIUrl(Id: Integer): Text
+    procedure APIUrl(Id: Integer): Text
     begin
         if Id = 0 then
             exit('https://taskmanager02-api-c6207da5113d.herokuapp.com/tasks')
@@ -302,32 +302,32 @@ codeunit 50120 "Task Manager API"
             exit('https://taskmanager02-api-c6207da5113d.herokuapp.com/tasks/' + Format(Id));
     end;
 
-    local procedure WebServiceCallFailedError(StatusCode: Integer)
+    procedure WebServiceCallFailedError(StatusCode: Integer)
     begin
         Error('Web service call failed (status code %1: %2)', StatusCode, GetHttpStatusMessage(StatusCode));
     end;
 
-    local procedure ConnectionError()
+    procedure ConnectionError()
     begin
         error('Cannot contact service, connection error!');
     end;
 
-    local procedure HttpStatusCodeOK(): Integer
+    procedure HttpStatusCodeOK(): Integer
     begin
         exit(200);
     end;
 
-    local procedure HttpStatusCodeCreated(): Integer
+    procedure HttpStatusCodeCreated(): Integer
     begin
         exit(201);
     end;
 
-    local procedure HttpStatusCodeNoContent(): Integer
+    procedure HttpStatusCodeNoContent(): Integer
     begin
         exit(204);
     end;
 
-    local procedure HttpStatusCodeNotFound(): Integer
+    procedure HttpStatusCodeNotFound(): Integer
     begin
         exit(404);
     end;
