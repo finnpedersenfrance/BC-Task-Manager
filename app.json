@@ -5,15 +5,16 @@
   "version": "1.0.0.0",
   "brief": "Frontend to Task Manager API",
   "description": "Simple app to illustrate how BC can work as a pure frontend.",
-  "privacyStatement": "https://finnpedersenkazes.github.io/",
-  "EULA": "https://finnpedersenkazes.github.io/",
-  "help": "https://finnpedersenkazes.github.io/",
-  "url": "https://finnpedersenkazes.github.io/",
+  "privacyStatement": "https://www.finnpedersenfrance.com/",
+  "EULA": "https://www.finnpedersenfrance.com/",
+  "help": "https://www.finnpedersenfrance.com/",
+  "url": "https://www.finnpedersenfrance.com/",
   "logo": "Logo.png",
   "dependencies": [],
   "screenshots": [],
   "platform": "1.0.0.0",
-  "application": "22.0.0.0",
+  "application": "23.0.0.0",
+  "runtime": "11.0",
   "idRanges": [
     {
       "from": 50120,
@@ -28,6 +29,5 @@
     "allowDownloadingSource": true,
     "includeSourceInSymbolFile": true
   },
-  "contextSensitiveHelpUrl": "https://finnpedersenkazes.github.io/",
-  "runtime": "11.1"
+  "contextSensitiveHelpUrl": "https://www.finnpedersenfrance.com/"
 }
