@@ -1,3 +1,5 @@
+namespace FinnPedersenFrance.Demo.TaskManagerAPI;
+
 page 50121 "Task Manager Entry Card"
 {
     ApplicationArea = All;

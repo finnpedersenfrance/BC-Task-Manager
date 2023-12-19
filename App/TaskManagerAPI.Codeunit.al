@@ -1,3 +1,5 @@
+namespace FinnPedersenFrance.Demo.TaskManagerAPI;
+
 codeunit 50120 "Task Manager API"
 {
 
@@ -11,79 +13,79 @@ codeunit 50120 "Task Manager API"
     procedure CreateOneRequest(var TaskManagerEntry: Record "Task Manager Entry")
     var
         Document: JsonObject;
-        Client: HttpClient;
-        RequestMessage: HttpRequestMessage;
-        ResponseMessage: HttpResponseMessage;
+        HttpClient: HttpClient;
+        HttpRequestMessage: HttpRequestMessage;
+        HttpResponseMessage: HttpResponseMessage;
         Headers: HttpHeaders;
-        Content: HttpContent;
+        HttpContent: HttpContent;
         TextJson: Text;
         RequestUrl: Text;
         TextResponse: Text;
     begin
         EncodeTaskObject(TaskManagerEntry, Document);
         Document.WriteTo(TextJson);
-        RequestMessage.Method := 'POST';
+        HttpRequestMessage.Method := 'POST';
         RequestUrl := APIUrl(0);
-        RequestMessage.SetRequestUri(RequestUrl);
+        HttpRequestMessage.SetRequestUri(RequestUrl);
 
-        Content.WriteFrom(TextJson);
-        Content.GetHeaders(Headers);
+        HttpContent.WriteFrom(TextJson);
+        HttpContent.GetHeaders(Headers);
         Headers.Clear();
         Headers.Add('Content-Type', 'application/json');
-        RequestMessage.Content := Content;
+        HttpRequestMessage.Content := HttpContent;
 
-        if Client.Send(RequestMessage, ResponseMessage) then begin
-            if ResponseMessage.HttpStatusCode() = HttpStatusCodeCreated() then begin
-                ResponseMessage.Content().ReadAs(TextResponse);
+        if HttpClient.Send(HttpRequestMessage, HttpResponseMessage) then begin
+            if HttpResponseMessage.HttpStatusCode() = HttpStatusCodeCreated() then begin
+                HttpResponseMessage.Content().ReadAs(TextResponse);
                 ProcessJsonObjectResult(TextResponse, TaskManagerEntry);
             end else
-                WebServiceCallFailedError(ResponseMessage.HttpStatusCode());
+                WebServiceCallFailedError(HttpResponseMessage.HttpStatusCode());
         end else
             ConnectionError();
     end;
 
     procedure ReadAllRequest(var TaskManagerEntry: Record "Task Manager Entry")
     var
-        Client: HttpClient;
-        RequestMessage: HttpRequestMessage;
-        ResponseMessage: HttpResponseMessage;
+        HttpClient: HttpClient;
+        HttpRequestMessage: HttpRequestMessage;
+        HttpResponseMessage: HttpResponseMessage;
         RequestUrl: Text;
         TextResponse: Text;
     begin
-        RequestMessage.Method := 'GET';
+        HttpRequestMessage.Method := 'GET';
         RequestUrl := APIUrl(0);
-        RequestMessage.SetRequestUri(RequestUrl);
+        HttpRequestMessage.SetRequestUri(RequestUrl);
 
-        if Client.Send(RequestMessage, ResponseMessage) then begin
-            if ResponseMessage.HttpStatusCode() = HttpStatusCodeOK() then begin
-                ResponseMessage.Content().ReadAs(TextResponse);
+        if HttpClient.Send(HttpRequestMessage, HttpResponseMessage) then begin
+            if HttpResponseMessage.HttpStatusCode() = HttpStatusCodeOK() then begin
+                HttpResponseMessage.Content().ReadAs(TextResponse);
                 ProcessJsonArrayResult(TextResponse, TaskManagerEntry);
             end else
-                WebServiceCallFailedError(ResponseMessage.HttpStatusCode());
+                WebServiceCallFailedError(HttpResponseMessage.HttpStatusCode());
         end else
             ConnectionError();
     end;
 
     procedure ReadOneRequest(EntryId: Integer; var TaskManagerEntry: Record "Task Manager Entry")
     var
-        Client: HttpClient;
-        RequestMessage: HttpRequestMessage;
-        ResponseMessage: HttpResponseMessage;
+        HttpClient: HttpClient;
+        HttpRequestMessage: HttpRequestMessage;
+        HttpResponseMessage: HttpResponseMessage;
         RequestUrl: Text;
         TextResponse: Text;
     begin
         if EntryId = 0 then
             Error('ReadOneRequest was called with id = 0. The Id must be a possitive integer.');
-        RequestMessage.Method := 'GET';
+        HttpRequestMessage.Method := 'GET';
         RequestUrl := APIUrl(EntryId);
-        RequestMessage.SetRequestUri(RequestUrl);
+        HttpRequestMessage.SetRequestUri(RequestUrl);
 
-        if Client.Send(RequestMessage, ResponseMessage) then begin
-            if ResponseMessage.HttpStatusCode() = HttpStatusCodeOK() then begin
-                ResponseMessage.Content().ReadAs(TextResponse);
+        if HttpClient.Send(HttpRequestMessage, HttpResponseMessage) then begin
+            if HttpResponseMessage.HttpStatusCode() = HttpStatusCodeOK() then begin
+                HttpResponseMessage.Content().ReadAs(TextResponse);
                 ProcessJsonObjectResult(TextResponse, TaskManagerEntry);
             end else
-                WebServiceCallFailedError(ResponseMessage.HttpStatusCode());
+                WebServiceCallFailedError(HttpResponseMessage.HttpStatusCode());
         end else
             ConnectionError();
     end;
@@ -91,11 +93,11 @@ codeunit 50120 "Task Manager API"
     procedure UpdateOneRequest(var TaskManagerEntry: Record "Task Manager Entry")
     var
         Document: JsonObject;
-        Client: HttpClient;
-        RequestMessage: HttpRequestMessage;
-        ResponseMessage: HttpResponseMessage;
+        HttpClient: HttpClient;
+        HttpRequestMessage: HttpRequestMessage;
+        HttpResponseMessage: HttpResponseMessage;
         Headers: HttpHeaders;
-        Content: HttpContent;
+        HttpContent: HttpContent;
         TextJson: Text;
         RequestUrl: Text;
         TextResponse: Text;
@@ -104,44 +106,44 @@ codeunit 50120 "Task Manager API"
             exit;
         EncodeTaskObject(TaskManagerEntry, Document);
         Document.WriteTo(TextJson);
-        RequestMessage.Method := 'PATCH';
+        HttpRequestMessage.Method := 'PATCH';
 
         RequestUrl := APIUrl(TaskManagerEntry.Id);
-        RequestMessage.SetRequestUri(RequestUrl);
+        HttpRequestMessage.SetRequestUri(RequestUrl);
 
-        Content.WriteFrom(TextJson);
-        Content.GetHeaders(Headers);
+        HttpContent.WriteFrom(TextJson);
+        HttpContent.GetHeaders(Headers);
         Headers.Clear();
         Headers.Add('Content-Type', 'application/json');
-        RequestMessage.Content := Content;
+        HttpRequestMessage.Content := HttpContent;
 
-        if Client.Send(RequestMessage, ResponseMessage) then begin
-            if ResponseMessage.HttpStatusCode() = HttpStatusCodeOK() then begin
-                ResponseMessage.Content().ReadAs(TextResponse);
+        if HttpClient.Send(HttpRequestMessage, HttpResponseMessage) then begin
+            if HttpResponseMessage.HttpStatusCode() = HttpStatusCodeOK() then begin
+                HttpResponseMessage.Content().ReadAs(TextResponse);
                 ProcessJsonObjectResult(TextResponse, TaskManagerEntry);
             end else
-                if ResponseMessage.HttpStatusCode() <> HttpStatusCodeNotFound() then // if we run an update on an entry that has been deleted
-                    WebServiceCallFailedError(ResponseMessage.HttpStatusCode());
+                if HttpResponseMessage.HttpStatusCode() <> HttpStatusCodeNotFound() then // if we run an update on an entry that has been deleted
+                    WebServiceCallFailedError(HttpResponseMessage.HttpStatusCode());
         end else
             ConnectionError();
     end;
 
     procedure DeleteOneRequest(EntryId: Integer)
     var
-        Client: HttpClient;
-        RequestMessage: HttpRequestMessage;
-        ResponseMessage: HttpResponseMessage;
+        HttpClient: HttpClient;
+        HttpRequestMessage: HttpRequestMessage;
+        HttpResponseMessage: HttpResponseMessage;
         RequestUrl: Text;
     begin
         if EntryId = 0 then
             exit;
-        RequestMessage.Method := 'DELETE';
+        HttpRequestMessage.Method := 'DELETE';
         RequestUrl := APIUrl(EntryId);
-        RequestMessage.SetRequestUri(RequestUrl);
+        HttpRequestMessage.SetRequestUri(RequestUrl);
 
-        if Client.Send(RequestMessage, ResponseMessage) then begin
-            if not (ResponseMessage.HttpStatusCode() in [HttpStatusCodeNoContent(), HttpStatusCodeNotFound()]) then
-                WebServiceCallFailedError(ResponseMessage.HttpStatusCode());
+        if HttpClient.Send(HttpRequestMessage, HttpResponseMessage) then begin
+            if not (HttpResponseMessage.HttpStatusCode() in [HttpStatusCodeNoContent(), HttpStatusCodeNotFound()]) then
+                WebServiceCallFailedError(HttpResponseMessage.HttpStatusCode());
         end else
             ConnectionError();
     end;
@@ -335,6 +337,7 @@ codeunit 50120 "Task Manager API"
     procedure GetHttpStatusMessage(HttpStatusCode: Integer): Text
     var
         StatusMessage: Text;
+        UnknownStatusCodeMsg: Label 'Unknown Status Code %1', Comment = '%1 = Unknown status code.';
     begin
         case HttpStatusCode of
             100:
@@ -464,7 +467,7 @@ codeunit 50120 "Task Manager API"
             511:
                 StatusMessage := 'Network Authentication Required';
             else
-                StatusMessage := StrSubstNo('Unknown Status Code %1', HttpStatusCode);
+                StatusMessage := StrSubstNo(UnknownStatusCodeMsg, HttpStatusCode);
         end;
 
         exit(StatusMessage);

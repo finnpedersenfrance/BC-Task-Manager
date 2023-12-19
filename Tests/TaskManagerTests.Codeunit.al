@@ -1,3 +1,5 @@
+namespace FinnPedersenFrance.Demo.TaskManagerAPI;
+
 codeunit 50121 "Task Manager Tests"
 {
     Subtype = Test;

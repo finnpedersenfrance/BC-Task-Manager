@@ -1,3 +1,5 @@
+namespace FinnPedersenFrance.Demo.TaskManagerAPI;
+
 table 50120 "Task Manager Entry"
 {
     Caption = 'Task Manager Entry';
@@ -76,23 +78,23 @@ table 50120 "Task Manager Entry"
 
     trigger OnInsert()
     var
-        TaskManagerFunctions: Codeunit "Task Manager API";
+        TaskManagerAPI: Codeunit "Task Manager API";
     begin
-        TaskManagerFunctions.CreateOneRequest(Rec);
+        TaskManagerAPI.CreateOneRequest(Rec);
     end;
 
     trigger OnModify()
     var
-        TaskManagerFunctions: Codeunit "Task Manager API";
+        TaskManagerAPI: Codeunit "Task Manager API";
     begin
-        TaskManagerFunctions.UpdateOneRequest(Rec);
+        TaskManagerAPI.UpdateOneRequest(Rec);
     end;
 
     trigger OnDelete()
     var
-        TaskManagerFunctions: Codeunit "Task Manager API";
+        TaskManagerAPI: Codeunit "Task Manager API";
     begin
-        TaskManagerFunctions.DeleteOneRequest(Rec.id);
+        TaskManagerAPI.DeleteOneRequest(Rec.id);
     end;
 
 }
