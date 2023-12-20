@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en-US" target-language="da-DK" original="Task Manager Frontend">
+    <body>
+      <group id="body">
+        <trans-unit id="Table 2132452766 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Task Manager Entry</source>
+          <target state="final">Opgave</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table Task Manager Entry - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2132452766 - Field 2945095910 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Attention Date</source>
+          <target state="final">Opmærksomhedsdato</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table Task Manager Entry - Field Attention Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2132452766 - Field 2570673311 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Created At</source>
+          <target state="final">Oprettet kl</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table Task Manager Entry - Field Created At - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2132452766 - Field 3731371814 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Deadline</source>
+          <target state="final">Deadline</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table Task Manager Entry - Field Deadline - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2132452766 - Field 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <target state="final">Beskrivelse</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table Task Manager Entry - Field Description - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2132452766 - Field 2454085869 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Duration Minutes</source>
+          <target state="final">Varighed minutter</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table Task Manager Entry - Field Duration Minutes - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2132452766 - Field 415504711 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Id</source>
+          <target state="final">Id</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table Task Manager Entry - Field Id - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2132452766 - Field 2494576388 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Planned Date</source>
+          <target state="final">Planlagt dato</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table Task Manager Entry - Field Planned Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2132452766 - Field 1180402187 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Planned Starting Time</source>
+          <target state="final">Planlagt starttidspunkt</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table Task Manager Entry - Field Planned Starting Time - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2132452766 - Field 513339096 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Status</source>
+          <target state="final">Status</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table Task Manager Entry - Field Status - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2132452766 - Field 513339096 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unplanned,Planned,Done,In the bin</source>
+          <target state="final">Uplanlagt,Planlagt,Udført,I skraldespanden</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table Task Manager Entry - Field Status - Property OptionCaption</note>
+        </trans-unit>
+        <trans-unit id="Table 2132452766 - Field 329424276 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Title</source>
+          <target state="final">Titel</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table Task Manager Entry - Field Title - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2132452766 - Field 4268781252 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Updated At</source>
+          <target state="final">Opdateret kl</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table Task Manager Entry - Field Updated At - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2132452766 - Field 880044851 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Urgency</source>
+          <target state="final">Uopsættelighed</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table Task Manager Entry - Field Urgency - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2132452766 - Field 880044851 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Just do it,Plan it,Delegate it,Look at it later</source>
+          <target state="final">Bare gør det,Planlæg det,Uddeleger det,Se på det senere</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Table Task Manager Entry - Field Urgency - Property OptionCaption</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1334040962 - Method 200578883 - NamedType 617855940" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unknown Status Code %1</source>
+          <target state="final">Ukendt statuskode %1</target>
+          <note from="Developer" annotates="general" priority="2">%1 = Unknown status code.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Task Manager API - Method GetHttpStatusMessage - NamedType UnknownStatusCodeMsg</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Task Manager Entry Card</source>
+          <target state="final">Opgavekort</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Control 318613646 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Details</source>
+          <target state="final">Detaljer</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Control Details - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Description field.</source>
+          <target state="final">Angiver værdien af feltet Beskrivelse.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Control Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Control 2494576388 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Planned Date field.</source>
+          <target state="final">Angiver værdien af feltet Planlagt dato.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Control Planned Date - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Control 1180402187 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Planned Starting Time field.</source>
+          <target state="final">Angiver værdien af feltet Planlagt starttid.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Control Planned Starting Time - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Control 2445482498 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>General</source>
+          <target state="final">Generel</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Control General - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Control 2945095910 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Attention Date field.</source>
+          <target state="final">Angiver værdien af feltet Attention Date.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Control Attention Date - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Control 3731371814 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Deadline field.</source>
+          <target state="final">Angiver værdien af feltet Deadline.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Control Deadline - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Control 2454085869 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Duration Minutes field.</source>
+          <target state="final">Angiver værdien af feltet Varighed minutter.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Control Duration Minutes - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Control 415504711 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Id field.</source>
+          <target state="final">Angiver værdien af Id-feltet.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Control Id - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Control 513339096 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Status field.</source>
+          <target state="final">Angiver værdien af feltet Status.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Control Status - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Control 329424276 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Title field.</source>
+          <target state="final">Angiver værdien af feltet Titel.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Control Title - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Control 880044851 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Urgency field.</source>
+          <target state="final">Angiver værdien af feltet Haster.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Control Urgency - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Control 3242088303 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>System</source>
+          <target state="final">System</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Control System - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Control 2570673311 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies when the entry was created.</source>
+          <target state="final">Angiver, hvornår posten blev oprettet.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Control Created At - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Control 4268781252 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies when the entry was last updated.</source>
+          <target state="final">Angiver hvornår posten sidst blev opdateret.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Control Updated At - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Action 2026913255 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gets all tasks from the Task Manager API.</source>
+          <target state="final">Henter alle opgaver fra Task Manager API.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Action Refresh - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 843840218 - Action 2026913255 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Refresh</source>
+          <target state="final">Opdater</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry Card - Action Refresh - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 4218692700 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Task Manager Entry List</source>
+          <target state="final">Task Manager Entry List</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry List - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 4218692700 - Control 2945095910 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Attention Date field.</source>
+          <target state="final">Angiver værdien af feltet Attention Date.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry List - Control Attention Date - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4218692700 - Control 3731371814 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Deadline field.</source>
+          <target state="final">Angiver værdien af feltet Deadline.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry List - Control Deadline - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4218692700 - Control 415504711 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Id field.</source>
+          <target state="final">Angiver værdien af Id-feltet.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry List - Control Id - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4218692700 - Control 513339096 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Status field.</source>
+          <target state="final">Angiver værdien af feltet Status.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry List - Control Status - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4218692700 - Control 329424276 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Title field.</source>
+          <target state="final">Angiver værdien af feltet Titel.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry List - Control Title - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4218692700 - Control 880044851 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Urgency field.</source>
+          <target state="final">Angiver værdien af feltet Haster.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry List - Control Urgency - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4218692700 - Action 2026913255 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gets all tasks from the Task Manager API.</source>
+          <target state="final">Henter alle opgaver fra Task Manager API.</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry List - Action Refresh - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4218692700 - Action 2026913255 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Refresh</source>
+          <target state="final">Opdater</target>
+          <note from="Developer" annotates="general" priority="2" />
+          <note from="Xliff Generator" annotates="general" priority="3">Page Task Manager Entry List - Action Refresh - Property Caption</note>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>
