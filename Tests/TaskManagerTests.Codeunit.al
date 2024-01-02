@@ -12,7 +12,7 @@ codeunit 50121 "Task Manager Tests"
     [Test]
     procedure TestHttpStatusCodeOK()
     var
-        TaskManagerAPI: codeunit "Task Manager API";
+        TaskManagerAPI: Codeunit "Task Manager API";
     begin
         // [SCENARIO #001] Testing the HttpStatusCodeOK.
         // [GIVEN] Nothing special
@@ -20,13 +20,13 @@ codeunit 50121 "Task Manager Tests"
         // [THEN] The expected result is 200.
 
         if TaskManagerAPI.HttpStatusCodeOK() <> 200 then
-            error('HttpStatusCodeOK() failed');
+            Error('HttpStatusCodeOK() failed');
     end;
 
     [Test]
     procedure TestGetHttpStatusMessage()
     var
-        TaskManagerAPI: codeunit "Task Manager API";
+        TaskManagerAPI: Codeunit "Task Manager API";
     begin
         // [SCENARIO #001] Testing the GetHttpStatusMessage.
         // [GIVEN] Nothing special
@@ -34,17 +34,17 @@ codeunit 50121 "Task Manager Tests"
         // [THEN] The expected result is 200.
 
         if TaskManagerAPI.GetHttpStatusMessage(200) <> 'OK' then
-            error('GetHttpStatusMessage(200) failed');
+            Error('GetHttpStatusMessage(200) failed');
     end;
 
     [Test]
     procedure TestEncodeText()
     var
-        TaskManagerAPI: codeunit "Task Manager API";
-        ObjectKey: Text;
-        Value: Text;
+        TaskManagerAPI: Codeunit "Task Manager API";
         TaskObject: JsonObject;
         ValueToken: JsonToken;
+        ObjectKey: Text;
+        Value: Text;
     begin
         ObjectKey := 'key';
         Value := 'Value';
@@ -52,9 +52,8 @@ codeunit 50121 "Task Manager Tests"
         if TaskObject.Get('key', ValueToken) then
             if not ValueToken.AsValue().IsNull then
                 if 'Value' <> CopyStr(ValueToken.AsValue().AsText(), 1, 100) then
-                    error('EncodeText() failed. Value not found.');
+                    Error('EncodeText() failed. Value not found.');
         if not TaskObject.Get('key', ValueToken) then
-            error('EncodeText() failed. Key not found.');
+            Error('EncodeText() failed. Key not found.');
     end;
-
 }

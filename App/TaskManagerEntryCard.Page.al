@@ -4,14 +4,14 @@ page 50121 "Task Manager Entry Card"
 {
     ApplicationArea = All;
     Caption = 'Task Manager Entry Card';
+    InsertAllowed = false;
     PageType = Card;
     SourceTable = "Task Manager Entry";
     UsageCategory = None;
-    InsertAllowed = false;
 
     layout
     {
-        area(content)
+        area(Content)
         {
             group(General)
             {
@@ -52,8 +52,8 @@ page 50121 "Task Manager Entry Card"
 
                 field(Description; Rec.Description)
                 {
-                    ToolTip = 'Specifies the value of the Description field.';
                     MultiLine = true;
+                    ToolTip = 'Specifies the value of the Description field.';
                 }
                 field("Planned Date"; Rec."Planned Date")
                 {
@@ -86,20 +86,19 @@ page 50121 "Task Manager Entry Card"
         {
             action(Refresh)
             {
-                ApplicationArea = All;
                 Caption = 'Refresh';
+                Image = Refresh;
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 PromotedOnly = true;
                 ToolTip = 'Gets all tasks from the Task Manager API.';
-                Image = Refresh;
                 trigger OnAction()
                 var
                     TaskManagerFunctions: Codeunit "Task Manager API";
                 begin
-                    TaskManagerFunctions.ReadOneRequest(Rec.id, Rec);
-                    Message('The task %1 has been retrieved from the Task Manager API.', Rec.id);
+                    TaskManagerFunctions.ReadOneRequest(Rec.Id, Rec);
+                    Message('The task %1 has been retrieved from the Task Manager API.', Rec.Id);
                     CurrPage.Update();
                 end;
             }
@@ -111,9 +110,8 @@ page 50121 "Task Manager Entry Card"
         TaskManagerAPI: Codeunit "Task Manager API";
     begin
         if Rec.Id > 0 then begin
-            TaskManagerAPI.ReadOneRequest(Rec.id, Rec);
+            TaskManagerAPI.ReadOneRequest(Rec.Id, Rec);
             CurrPage.Update();
         end;
     end;
-
 }

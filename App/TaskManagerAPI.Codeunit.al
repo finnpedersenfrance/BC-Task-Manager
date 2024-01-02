@@ -2,7 +2,6 @@ namespace FinnPedersenFrance.Demo.TaskManagerAPI;
 
 codeunit 50120 "Task Manager API"
 {
-
     /* CRUD operations on the Task Manager API
         C: Create
         R: Read
@@ -12,14 +11,14 @@ codeunit 50120 "Task Manager API"
 
     procedure CreateOneRequest(var TaskManagerEntry: Record "Task Manager Entry")
     var
-        Document: JsonObject;
         HttpClient: HttpClient;
+        HttpContent: HttpContent;
+        Headers: HttpHeaders;
         HttpRequestMessage: HttpRequestMessage;
         HttpResponseMessage: HttpResponseMessage;
-        Headers: HttpHeaders;
-        HttpContent: HttpContent;
-        TextJson: Text;
+        Document: JsonObject;
         RequestUrl: Text;
+        TextJson: Text;
         TextResponse: Text;
     begin
         EncodeTaskObject(TaskManagerEntry, Document);
@@ -92,17 +91,17 @@ codeunit 50120 "Task Manager API"
 
     procedure UpdateOneRequest(var TaskManagerEntry: Record "Task Manager Entry")
     var
-        Document: JsonObject;
         HttpClient: HttpClient;
+        HttpContent: HttpContent;
+        Headers: HttpHeaders;
         HttpRequestMessage: HttpRequestMessage;
         HttpResponseMessage: HttpResponseMessage;
-        Headers: HttpHeaders;
-        HttpContent: HttpContent;
-        TextJson: Text;
+        Document: JsonObject;
         RequestUrl: Text;
+        TextJson: Text;
         TextResponse: Text;
     begin
-        if TaskManagerEntry.id = 0 then
+        if TaskManagerEntry.Id = 0 then
             exit;
         EncodeTaskObject(TaskManagerEntry, Document);
         Document.WriteTo(TextJson);
@@ -153,7 +152,7 @@ codeunit 50120 "Task Manager API"
         TaskList: JsonArray;
     begin
         if not TaskList.ReadFrom(TextResponse) then
-            error('I expected a JSON ARRAY, but got this %1.', TextResponse);
+            Error('I expected a JSON ARRAY, but got this %1.', TextResponse);
 
         DecodeTaskArray(TaskList, TaskManagerEntry);
     end;
@@ -163,15 +162,15 @@ codeunit 50120 "Task Manager API"
         TaskObject: JsonObject;
     begin
         if not TaskObject.ReadFrom(TextResponse) then
-            error('I expected a JSON OBJECT, but got this: %1', TextResponse);
+            Error('I expected a JSON OBJECT, but got this: %1', TextResponse);
 
         DecodeTaskObject(TaskObject, TaskManagerEntry);
     end;
 
     procedure DecodeTaskArray(TaskList: JsonArray; var TaskManagerEntry: Record "Task Manager Entry")
     var
-        Token: JsonToken;
         TaskObject: JsonObject;
+        Token: JsonToken;
     begin
         TaskManagerEntry.DeleteAll();
         TaskManagerEntry.Reset();
@@ -184,18 +183,18 @@ codeunit 50120 "Task Manager API"
 
     procedure DecodeTaskObject(TaskObject: JsonObject; var TaskManagerEntry: Record "Task Manager Entry")
     var
-        IdField: JsonToken;
-        TitleField: JsonToken;
-        DescriptionField: JsonToken;
-        UrgencyField: JsonToken;
-        DurationField: JsonToken;
         AttentionDateField: JsonToken;
+        CreatedDateField: JsonToken;
         DeadlineField: JsonToken;
+        DescriptionField: JsonToken;
+        DurationField: JsonToken;
+        IdField: JsonToken;
         PlannedDateField: JsonToken;
         PlannedStartingTimeField: JsonToken;
         StatusField: JsonToken;
-        CreatedDateField: JsonToken;
+        TitleField: JsonToken;
         UpdatedDateField: JsonToken;
+        UrgencyField: JsonToken;
     begin
         TaskManagerEntry.Init();
 
@@ -311,7 +310,7 @@ codeunit 50120 "Task Manager API"
 
     procedure ConnectionError()
     begin
-        error('Cannot contact service, connection error!');
+        Error('Cannot contact service, connection error!');
     end;
 
     procedure HttpStatusCodeOK(): Integer
@@ -336,8 +335,8 @@ codeunit 50120 "Task Manager API"
 
     procedure GetHttpStatusMessage(HttpStatusCode: Integer): Text
     var
-        StatusMessage: Text;
         UnknownStatusCodeMsg: Label 'Unknown Status Code %1', Comment = '%1 = Unknown status code.';
+        StatusMessage: Text;
     begin
         case HttpStatusCode of
             100:
