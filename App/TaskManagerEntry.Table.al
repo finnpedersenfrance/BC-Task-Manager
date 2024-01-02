@@ -3,10 +3,10 @@ namespace FinnPedersenFrance.Demo.TaskManagerAPI;
 table 50120 "Task Manager Entry"
 {
     Caption = 'Task Manager Entry';
-    DataClassification = ToBeClassified;
-    LookupPageId = "Task Manager Entry Card";
-    DrillDownPageId = "Task Manager Entry Card";
     DataCaptionFields = Id, Title;
+    DataClassification = ToBeClassified;
+    DrillDownPageId = "Task Manager Entry Card";
+    LookupPageId = "Task Manager Entry Card";
     TableType = Temporary;
 
     fields
@@ -27,8 +27,8 @@ table 50120 "Task Manager Entry"
         field(4; Urgency; Option)
         {
             Caption = 'Urgency';
-            OptionMembers = "Just do it","Plan it","Delegate it","Look at it later";
             OptionCaption = 'Just do it,Plan it,Delegate it,Look at it later';
+            OptionMembers = "Just do it","Plan it","Delegate it","Look at it later";
         }
         field(5; "Duration Minutes"; Integer)
         {
@@ -53,10 +53,9 @@ table 50120 "Task Manager Entry"
         field(10; Status; Option)
         {
             Caption = 'Status';
-            OptionMembers = "Unplanned","Planned","Done","In the bin";
             OptionCaption = 'Unplanned,Planned,Done,In the bin';
+            OptionMembers = Unplanned,Planned,Done,"In the bin";
         }
-
         field(11; "Created At"; DateTime)
         {
             Caption = 'Created At';
@@ -94,7 +93,6 @@ table 50120 "Task Manager Entry"
     var
         TaskManagerAPI: Codeunit "Task Manager API";
     begin
-        TaskManagerAPI.DeleteOneRequest(Rec.id);
+        TaskManagerAPI.DeleteOneRequest(Rec.Id);
     end;
-
 }

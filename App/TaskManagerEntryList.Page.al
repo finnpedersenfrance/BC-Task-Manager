@@ -11,7 +11,7 @@ page 50120 "Task Manager Entry List"
 
     layout
     {
-        area(content)
+        area(Content)
         {
             repeater(General)
             {
@@ -47,7 +47,6 @@ page 50120 "Task Manager Entry List"
                 }
             }
         }
-
     }
 
     actions
@@ -56,14 +55,13 @@ page 50120 "Task Manager Entry List"
         {
             action(Refresh)
             {
-                ApplicationArea = All;
                 Caption = 'Refresh';
+                Image = Refresh;
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 PromotedOnly = true;
                 ToolTip = 'Gets all tasks from the Task Manager API.';
-                Image = Refresh;
                 trigger OnAction()
                 var
                     TaskManagerAPI: Codeunit "Task Manager API";
@@ -84,5 +82,4 @@ page 50120 "Task Manager Entry List"
         Rec.DeleteAll();
         TaskManagerAPI.ReadAllRequest(Rec);
     end;
-
 }
