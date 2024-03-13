@@ -99,7 +99,7 @@ page 50121 "Task Manager Entry Card"
                 begin
                     TaskManagerFunctions.ReadOneRequest(Rec.Id, Rec);
                     Message('The task %1 has been retrieved from the Task Manager API.', Rec.Id);
-                    CurrPage.Update();
+                    CurrPage.Update(false);
                 end;
             }
         }
@@ -111,7 +111,7 @@ page 50121 "Task Manager Entry Card"
     begin
         if Rec.Id > 0 then begin
             TaskManagerAPI.ReadOneRequest(Rec.Id, Rec);
-            CurrPage.Update();
+            CurrPage.Update(false);
         end;
     end;
 }

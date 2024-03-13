@@ -24,11 +24,9 @@ table 50120 "Task Manager Entry"
         {
             Caption = 'Description';
         }
-        field(4; Urgency; Option)
+        field(4; Urgency; Enum Urgency)
         {
             Caption = 'Urgency';
-            OptionCaption = 'Just do it,Plan it,Delegate it,Look at it later';
-            OptionMembers = "Just do it","Plan it","Delegate it","Look at it later";
         }
         field(5; "Duration Minutes"; Integer)
         {
@@ -50,11 +48,9 @@ table 50120 "Task Manager Entry"
         {
             Caption = 'Planned Starting Time';
         }
-        field(10; Status; Option)
+        field(10; Status; Enum TaskStatus)
         {
             Caption = 'Status';
-            OptionCaption = 'Unplanned,Planned,Done,In the bin';
-            OptionMembers = Unplanned,Planned,Done,"In the bin";
         }
         field(11; "Created At"; DateTime)
         {
@@ -69,7 +65,7 @@ table 50120 "Task Manager Entry"
     }
     keys
     {
-        key(APIKey; Id)
+        key(PK; Id)
         {
             Clustered = true;
         }

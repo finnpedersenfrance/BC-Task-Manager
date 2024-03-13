@@ -26,7 +26,7 @@ page 50120 "Task Manager Entry List"
                     trigger OnDrillDown()
                     begin
                         Page.Run(Page::"Task Manager Entry Card", Rec);
-                        CurrPage.Update();
+                        CurrPage.Update(false);
                     end;
                 }
                 field("Attention Date"; Rec."Attention Date")
@@ -66,10 +66,10 @@ page 50120 "Task Manager Entry List"
                 var
                     TaskManagerAPI: Codeunit "Task Manager API";
                 begin
-                    Rec.DeleteAll();
+                    Rec.DeleteAll(false);
                     TaskManagerAPI.ReadAllRequest(Rec);
                     Message('All tasks have been retrieved from the Task Manager API.');
-                    CurrPage.Update();
+                    CurrPage.Update(false);
                 end;
             }
         }
@@ -79,7 +79,7 @@ page 50120 "Task Manager Entry List"
     var
         TaskManagerAPI: Codeunit "Task Manager API";
     begin
-        Rec.DeleteAll();
+        Rec.DeleteAll(false);
         TaskManagerAPI.ReadAllRequest(Rec);
     end;
 }

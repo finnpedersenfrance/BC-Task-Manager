@@ -1,7 +1,14 @@
 # Task Manager API
 
+CRUD operations on the Task Manager API
 
-// https://taskmanager02-api-c6207da5113d.herokuapp.com/tasks
+- C: Create
+- R: Read
+- U: Update
+- D: Delete
+
+
+https://taskmanager02-api-c6207da5113d.herokuapp.com/tasks
 
 
 ````json

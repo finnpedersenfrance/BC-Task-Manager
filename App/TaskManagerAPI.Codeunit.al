@@ -2,13 +2,6 @@ namespace FinnPedersenFrance.Demo.TaskManagerAPI;
 
 codeunit 50120 "Task Manager API"
 {
-    /* CRUD operations on the Task Manager API
-        C: Create
-        R: Read
-        U: Update
-        D: Delete
-    */
-
     procedure CreateOneRequest(var TaskManagerEntry: Record "Task Manager Entry")
     var
         HttpClient: HttpClient;
@@ -70,11 +63,12 @@ codeunit 50120 "Task Manager API"
         HttpClient: HttpClient;
         HttpRequestMessage: HttpRequestMessage;
         HttpResponseMessage: HttpResponseMessage;
+        MessageErr: Label 'ReadOneRequest was called with id = 0. The Id must be a possitive integer.';
         RequestUrl: Text;
         TextResponse: Text;
     begin
         if EntryId = 0 then
-            Error('ReadOneRequest was called with id = 0. The Id must be a possitive integer.');
+            Error(MessageErr);
         HttpRequestMessage.Method := 'GET';
         RequestUrl := APIUrl(EntryId);
         HttpRequestMessage.SetRequestUri(RequestUrl);
@@ -150,9 +144,10 @@ codeunit 50120 "Task Manager API"
     procedure ProcessJsonArrayResult(TextResponse: Text; var TaskManagerEntry: Record "Task Manager Entry")
     var
         TaskList: JsonArray;
+        MessageErr: Label 'I expected a JSON ARRAY, but got this %1.', Comment = '%1 = TextResponse';
     begin
         if not TaskList.ReadFrom(TextResponse) then
-            Error('I expected a JSON ARRAY, but got this %1.', TextResponse);
+            Error(MessageErr, TextResponse);
 
         DecodeTaskArray(TaskList, TaskManagerEntry);
     end;
@@ -160,9 +155,10 @@ codeunit 50120 "Task Manager API"
     procedure ProcessJsonObjectResult(TextResponse: Text; var TaskManagerEntry: Record "Task Manager Entry")
     var
         TaskObject: JsonObject;
+        MessageErr: Label 'I expected a JSON OBJECT, but got this %1.', Comment = '%1 = TextResponse';
     begin
         if not TaskObject.ReadFrom(TextResponse) then
-            Error('I expected a JSON OBJECT, but got this: %1', TextResponse);
+            Error(MessageErr, TextResponse);
 
         DecodeTaskObject(TaskObject, TaskManagerEntry);
     end;
@@ -172,12 +168,12 @@ codeunit 50120 "Task Manager API"
         TaskObject: JsonObject;
         Token: JsonToken;
     begin
-        TaskManagerEntry.DeleteAll();
+        TaskManagerEntry.DeleteAll(false);
         TaskManagerEntry.Reset();
         foreach Token in TaskList do begin
             TaskObject := Token.AsObject();
             DecodeTaskObject(TaskObject, TaskManagerEntry);
-            TaskManagerEntry.Insert();
+            TaskManagerEntry.Insert(false);
         end;
     end;
 
@@ -212,7 +208,7 @@ codeunit 50120 "Task Manager API"
 
         if TaskObject.Get('urgency', UrgencyField) then
             if not UrgencyField.AsValue().IsNull then
-                TaskManagerEntry.Urgency := UrgencyField.AsValue().AsInteger();
+                TaskManagerEntry.Urgency := DecodeUrgency(UrgencyField);
 
         if TaskObject.Get('duration_minutes', DurationField) then
             if not DurationField.AsValue().IsNull then
@@ -235,7 +231,7 @@ codeunit 50120 "Task Manager API"
 
         if TaskObject.Get('status', StatusField) then
             if not StatusField.AsValue().IsNull then
-                TaskManagerEntry.Status := StatusField.AsValue().AsInteger();
+                TaskManagerEntry.Status := DecodeStatus(StatusField);
 
         if TaskObject.Get('created_at', CreatedDateField) then
             if not CreatedDateField.AsValue().IsNull then
@@ -246,19 +242,67 @@ codeunit 50120 "Task Manager API"
                 TaskManagerEntry."Updated At" := UpdatedDateField.AsValue().AsDateTime();
     end;
 
+    local procedure DecodeUrgency(UrgencyField: JsonToken) Urgency: Enum Urgency
+    var
+        UrgencyValue: Integer;
+        NullValueErr: Label 'DecodeUrgency was called with a null value.';
+        UnknownValueErr: Label 'Unknown urgency value: %1.', Comment = '%1 = Urgency Value';
+    begin
+        if not UrgencyField.AsValue().IsNull then begin
+            UrgencyValue := UrgencyField.AsValue().AsInteger();
+            case UrgencyValue of
+                0:
+                    exit(Urgency::"Just do it");
+                1:
+                    exit(Urgency::"Plan it");
+                2:
+                    exit(Urgency::"Delegate it");
+                3:
+                    exit(Urgency::"Look at it later");
+                else
+                    Error(UnknownValueErr, UrgencyValue);
+            end;
+        end else
+            Error(NullValueErr);
+    end;
+
+    local procedure DecodeStatus(StatusField: JsonToken) Status: Enum TaskStatus
+    var
+        StatusValue: Integer;
+        NullValueErr: Label 'DecodeStatus was called with a null value.';
+        UnknownValueErr: Label 'Unknown status value: %1.', Comment = '%1 = Status Value';
+    begin
+        if not StatusField.AsValue().IsNull then begin
+            StatusValue := StatusField.AsValue().AsInteger();
+            case StatusValue of
+                0:
+                    exit(Status::Unplanned);
+                1:
+                    exit(Status::Planned);
+                2:
+                    exit(Status::Done);
+                3:
+                    exit(Status::"In the bin");
+                else
+                    Error(UnknownValueErr, StatusValue);
+            end;
+        end else
+            Error(NullValueErr);
+    end;
+
     procedure EncodeTaskObject(TaskManagerEntry: Record "Task Manager Entry"; var TaskObject: JsonObject)
     begin
         if TaskManagerEntry.Id > 0 then
             EncodeInteger('id', TaskManagerEntry.Id, TaskObject);
         EncodeText('title', TaskManagerEntry.Title, TaskObject);
         EncodeText('description', TaskManagerEntry.Description, TaskObject);
-        EncodeInteger('urgency', TaskManagerEntry.Urgency, TaskObject);
+        EncodeInteger('urgency', TaskManagerEntry.Urgency.AsInteger(), TaskObject);
         EncodeInteger('duration_minutes', TaskManagerEntry."Duration Minutes", TaskObject);
         EncodeDate('attention_date', TaskManagerEntry."Attention Date", TaskObject);
         EncodeDate('deadline', TaskManagerEntry.Deadline, TaskObject);
         EncodeDate('planned_date', TaskManagerEntry."Planned Date", TaskObject);
         EncodeTime('planned_starting_time', TaskManagerEntry."Planned Date", TaskManagerEntry."Planned Starting Time", TaskObject);
-        EncodeInteger('status', TaskManagerEntry.Status, TaskObject);
+        EncodeInteger('status', TaskManagerEntry.Status.AsInteger(), TaskObject);
     end;
 
     procedure EncodeDate(ObjectKey: Text; Date: Date; var TaskObject: JsonObject)
@@ -304,13 +348,17 @@ codeunit 50120 "Task Manager API"
     end;
 
     procedure WebServiceCallFailedError(StatusCode: Integer)
+    var
+        CallFailedErr: Label 'Web service call failed (status code %1: %2).', Comment = '%1 = StatusCode, %2 = HttpStatusMessage';
     begin
-        Error('Web service call failed (status code %1: %2)', StatusCode, GetHttpStatusMessage(StatusCode));
+        Error(CallFailedErr, StatusCode, GetHttpStatusMessage(StatusCode));
     end;
 
     procedure ConnectionError()
+    var
+        ConnectionErr: Label 'Cannot contact service, connection error.';
     begin
-        Error('Cannot contact service, connection error!');
+        Error(ConnectionErr);
     end;
 
     procedure HttpStatusCodeOK(): Integer
@@ -335,7 +383,7 @@ codeunit 50120 "Task Manager API"
 
     procedure GetHttpStatusMessage(HttpStatusCode: Integer): Text
     var
-        UnknownStatusCodeMsg: Label 'Unknown Status Code %1', Comment = '%1 = Unknown status code.';
+        UnknownStatusCodeMsg: Label 'Unknown Status Code %1.', Comment = '%1 = Unknown status code.';
         StatusMessage: Text;
     begin
         case HttpStatusCode of

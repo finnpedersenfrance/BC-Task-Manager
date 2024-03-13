@@ -1,0 +1,21 @@
+{
+    "name": "Project specific rules",
+    "description": "Suppressing a few special rules.",
+    "rules": [
+        {
+            "id": "CM0004",
+            "action": "None",
+            "justification": "First 19 Field IDs are reserved for primary key fields."
+        },
+        {
+            "id": "LC0045",
+            "action": "None",
+            "justification": "Zero (0) Enum value should be reserved for Empty Value."
+        },
+        {
+            "id": "CM0026",
+            "action": "None",
+            "justification": "Zero (0) Enum value should be reserved for Empty Value."
+        }
+    ]
+}

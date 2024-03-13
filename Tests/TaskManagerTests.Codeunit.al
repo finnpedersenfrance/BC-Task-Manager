@@ -13,6 +13,7 @@ codeunit 50121 "Task Manager Tests"
     procedure TestHttpStatusCodeOK()
     var
         TaskManagerAPI: Codeunit "Task Manager API";
+        MessageErr: Label 'HttpStatusCodeOK() failed.';
     begin
         // [SCENARIO #001] Testing the HttpStatusCodeOK.
         // [GIVEN] Nothing special
@@ -20,13 +21,14 @@ codeunit 50121 "Task Manager Tests"
         // [THEN] The expected result is 200.
 
         if TaskManagerAPI.HttpStatusCodeOK() <> 200 then
-            Error('HttpStatusCodeOK() failed');
+            Error(MessageErr);
     end;
 
     [Test]
     procedure TestGetHttpStatusMessage()
     var
         TaskManagerAPI: Codeunit "Task Manager API";
+        MessageErr: Label 'GetHttpStatusMessage(200) failed.';
     begin
         // [SCENARIO #001] Testing the GetHttpStatusMessage.
         // [GIVEN] Nothing special
@@ -34,7 +36,7 @@ codeunit 50121 "Task Manager Tests"
         // [THEN] The expected result is 200.
 
         if TaskManagerAPI.GetHttpStatusMessage(200) <> 'OK' then
-            Error('GetHttpStatusMessage(200) failed');
+            Error(MessageErr);
     end;
 
     [Test]
@@ -43,6 +45,8 @@ codeunit 50121 "Task Manager Tests"
         TaskManagerAPI: Codeunit "Task Manager API";
         TaskObject: JsonObject;
         ValueToken: JsonToken;
+        KeyNotFoundErr: Label 'EncodeText() failed. Key not found.';
+        ValueNotFoundErr: Label 'EncodeText() failed. Value not found.';
         ObjectKey: Text;
         Value: Text;
     begin
@@ -52,8 +56,8 @@ codeunit 50121 "Task Manager Tests"
         if TaskObject.Get('key', ValueToken) then
             if not ValueToken.AsValue().IsNull then
                 if 'Value' <> CopyStr(ValueToken.AsValue().AsText(), 1, 100) then
-                    Error('EncodeText() failed. Value not found.');
+                    Error(ValueNotFoundErr);
         if not TaskObject.Get('key', ValueToken) then
-            Error('EncodeText() failed. Key not found.');
+            Error(KeyNotFoundErr);
     end;
 }
